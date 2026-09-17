@@ -41,10 +41,10 @@ _GFX942_DECODE_CONFIGS = [
     (32, (32, 256, 2, 1)),
     (float("inf"), (32, 512, 2, 1)),
 ]
-# Elementwise passes over the topk index row; BLOCK is the padded topk.
+# Elementwise passes over the topk index row. A wavefront is 64 lanes on
+# gfx942, so the NVIDIA num_warps=8 is 512 threads there; measured on MI308X.
 _VALID_COUNTS_NUM_WARPS = 4 if is_hip() else 8
-_COMPACT_KV_BLOCK_TOPK = 64 if is_hip() else 16
-_COMPACT_KV_NUM_WARPS = 4 if is_hip() else 8
+_COMPACT_KV_NUM_WARPS = 1 if is_hip() else 8
 # Split count for decode on architectures without a measured table above.
 # Arbitrary; picked to oversubscribe a large GPU rather than from measurement.
 _DECODE_TARGET_PROGRAMS = 512
@@ -784,7 +784,7 @@ def qwen_sparse_kv_extraction_compact_triton(
     k, v, req_to_token, req_indices, indices, seq_lens, cu_k, out_k, out_v, batch, topk
 ):
     _, heads, dim = k.shape
-    block_topk = _COMPACT_KV_BLOCK_TOPK
+    block_topk = 16
     _compact_kv[(batch, heads, triton.cdiv(topk, block_topk))](
         k,
         v,
