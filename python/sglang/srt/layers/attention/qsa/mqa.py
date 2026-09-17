@@ -182,9 +182,9 @@ def _triton_qsa_mqa_decode_kernel(
         for page in range(group, pages, groups):
             # A negative page id marks unused page-table padding; the torch
             # reference clamps it to page 0 and masks the row by context length.
-            page_id = tl.maximum(
-                tl.load(page_table + batch * spt_b + page), 0
-            ).to(tl.int64)
+            page_id = tl.maximum(tl.load(page_table + batch * spt_b + page), 0).to(
+                tl.int64
+            )
             keys = tl.load(
                 k_cache
                 + page_id * sk_p
