@@ -132,9 +132,12 @@ static_assert(
 // Blackwell or greater: 256-bit (32 bytes)
 inline constexpr std::size_t kMaxVecBytes = SGL_ARCH_BLACKWELL_OR_GREATER ? 32 : 16;
 
-/// \brief Number of threads per warp (always 32 on NVIDIA/AMD GPUs).
+/// \brief Lanes per shuffle group. This is the hardware warp on NVIDIA, but on
+/// CDNA a wave is 64 lanes and this is a sub-group: `warp::reduce` passes it as
+/// the HIP `__shfl_xor` width, so reductions are correct, while a block sized
+/// as a multiple of it is not necessarily a whole number of waves.
 inline constexpr auto kWarpThreads = 32u;
-/// \brief Full warp active mask (all 32 lanes).
+/// \brief Full warp active mask.
 #ifndef USE_ROCM
 inline constexpr auto kFullMask = 0xffffffffu;
 #else
