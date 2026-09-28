@@ -82,6 +82,7 @@ class QSAIndexer(MultiPlatformOp):
             self.index_head_dim, eps=getattr(config, "rms_norm_eps", 1e-6)
         )
         self._rope_axis_map_cache = None
+        self._cos_sin_cache_fp32 = None
 
     @staticmethod
     def _validate_config(config) -> None:
@@ -129,8 +130,30 @@ class QSAIndexer(MultiPlatformOp):
             and len(getattr(self.rotary_emb, "mrope_section", None) or ()) in (0, 3)
             and getattr(self.rotary_emb, "cos_sin_cache", None) is not None
             and self.rotary_emb.cos_sin_cache.is_cuda
-            and self.rotary_emb.cos_sin_cache.dtype == torch.float32
         )
+
+    def _fp32_cos_sin_cache(self) -> torch.Tensor:
+        """The shared RoPE cache in fp32, which the fused prep kernels require.
+
+        `rotary_emb` is shared with the attention layer, whose
+        `_match_cos_sin_cache_dtype` rewrites `cos_sin_cache` to the query dtype
+        on its first forward; requiring fp32 here instead would disable the
+        fused path for the whole run. The copy is rebuilt when the shared cache
+        grows (`_ensure_cos_sin_cache_length` appends rows).
+        """
+
+        cache = self.rotary_emb.cos_sin_cache
+        if cache.dtype == torch.float32:
+            return cache
+        cached = self._cos_sin_cache_fp32
+        if (
+            cached is None
+            or cached.shape != cache.shape
+            or cached.device != cache.device
+        ):
+            cached = cache.to(torch.float32)
+            self._cos_sin_cache_fp32 = cached
+        return cached
 
     def _rope_axis_map(self, device) -> torch.Tensor:
         """Per-pair position-axis selector reproducing the MRoPE composition.
@@ -189,7 +212,7 @@ class QSAIndexer(MultiPlatformOp):
             q = qsa_index_q_norm_rope_store(
                 qk,
                 positions.long(),
-                self.rotary_emb.cos_sin_cache,
+                self._fp32_cos_sin_cache(),
                 self._rope_axis_map(qk.device),
                 self.q_layernorm.weight.data,
                 cache_loc[: qk.shape[0]].long(),
@@ -252,7 +275,7 @@ class QSAIndexer(MultiPlatformOp):
             .to(pool.index_state_dtype),
             group_locs.to(torch.int32),
             source_rope,
-            self.rotary_emb.cos_sin_cache,
+            self._fp32_cos_sin_cache(),
             self._rope_axis_map(source_keys.device),
             self.k_layernorm.weight.data,
             write_locs.to(torch.int32),
