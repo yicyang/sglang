@@ -265,7 +265,6 @@ class QwenSparseAttnBackend(AttentionBackend):
         if (
             _USE_PYHIP_QSA_ATTENTION
             and runner is not None
-            and not runner.is_draft_worker
             and runner.ps.attn_cp_size == runner.ps.attn_dcp_size == 1
             and runner.kv_cache_dtype == torch.bfloat16
             and profile is not None
@@ -276,7 +275,10 @@ class QwenSparseAttnBackend(AttentionBackend):
             from sglang.srt.layers.attention.qsa.pyhip_backend import PyHIPAttention
 
             self._pyhip_attention = PyHIPAttention()
-            logger.info("Using installed PyHIP for gfx942 QSA prefill attention")
+            logger.info(
+                "Using installed PyHIP for gfx942 QSA prefill attention (draft=%s)",
+                runner.is_draft_worker,
+            )
 
     @staticmethod
     def _is_speculative_paged_mode(forward_mode) -> bool:
