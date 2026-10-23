@@ -346,4 +346,7 @@ TP_SIZE=2 bash scripts/launch_qwen38_flash_next_fp8_mi308x_pure_tp_4_or_8_or_2.s
 - `results/`：kernel/、tune/、e2e/（第一轮，含已作废的 aiter 结果，仅作问题记录）、e2e_final/（最终）
 - 分支：`sglang` worktree → `gdn-opt-qwen38-tp2`；`aiter_fork` → `gdn-qwen38-tp2-gfx942`；`aiter_main` → `gdn-qwen38-tp2-gfx942`
 
-远端：PUSH_PLACEHOLDER
+远端：
+- https://github.com/yicyang/sglang/tree/gdn-opt-qwen38-tp2 ：sglang aiter GDN backend + gfx942 tuned FLA 配置（`ec4b9bf0f`）；脚本/结果/本报告（`benchmark/gdn_qwen38_mi308x/`）
+- https://github.com/yicyang/aiter/tree/gdn-qwen38-tp2-gfx942 ：基于安装版 4752a408 + #4952 prepare 修复（cherry-pick）+ chunk_o gfx942 tuned 配置 + FlyDSL decode tuned 行（e2e 所用 aiter）
+- https://github.com/yicyang/aiter/tree/gdn-k5-tuner-fix-qwen38 ：基于 ROCm/aiter main 60e01e537：K5 BV tuner 修复 + Qwen3.8 TP2 K5 表
