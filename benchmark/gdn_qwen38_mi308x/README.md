@@ -11,6 +11,10 @@
 | 次选 / 无法升级 aiter 时 | sglang 原生 Triton (FLA) + 本次 gfx942 tuned 配置（默认 backend，零接入成本） | 单层 3036 → 1826 µs（1.66x）；e2e 12k TTFT p50 -4.2%（1049.5 → 1005.4 ms） |
 | **Decode** | 保持 sglang 原生 Triton packed decode（`--linear-attn-decode-backend triton`，默认），bs≤8 用本次 tuned 配置 | 在冷 cache（真实 36 层轮转）下，Triton packed decode 在 bs≥12 时最好或持平；aiter FlyDSL decode（即使 tuned）在 bs 24/32 慢 3–5%；e2e decode ITL 各方案一致（差异 <1%，在噪声内） |
 
+Prefill 各阶段的推荐（详见 §3.6）：
+- **框架侧**（qkv split / causal_conv1d / gating）保持 sglang 不变。
+- **chunk 部分**（l2norm → prepare → K5 → chunk_o）整体使用 aiter `opt_vk`：FlyDSL 融合 prepare + HIP K5 + tuned chunk_o。不能逐阶段混搭，因为跨库的中间布局不同，混搭需要额外 transpose。
+
 GDN 在该模型 12k prefill 中只占约 11% 的 GPU 时间（profile），所以 2.6x 的 kernel 加速换来的是约 6% 的 TTFT 改善；decode 中 GDN（含 conv update）只占约 1.7% 的 GPU 时间，decode backend 选择对 e2e 几乎没有影响。
 
 **重要发现（会直接影响结论的坑）**
@@ -157,6 +161,33 @@ K5 上 aiter HIP/FlyDSL 比 sglang 原生快 **2.5–3.0x**；FlyDSL 比 HIP 再
 
 ### 3.5 框架层 split（ratio 3）
 `_GDN_FUSED_QKVZBA_RATIOS` 在 AITER 模式下不含 3，本模型走 `contiguous+cat` 回退路径。实测（`results/kernel/qkvzba_split.txt`，GPU 时间）：fused 版在 decode bs8–32 每层快 ~5 µs（每步 ~0.18 ms，<0.5%），在 12k prefill 每层慢 39 µs。两边影响都可忽略，**未修改**。
+
+### 3.6 Prefill 各阶段的 backend 推荐
+
+一层 GDN prefill 按执行顺序分为以下阶段。耗时取 T=12000、单序列、单层（TP2，H=24/Hg=8）的 GPU µs。chunk 部分来自 §3.3 的 kernel 基准；框架侧阶段来自 e2e prefill profile（144 次调用的平均）。
+
+| # | 阶段 | 候选实测 (µs) | 推荐 | 说明 |
+|---|---|---|---|---|
+| 1 | qkvzba split（`fused_qkv_split_gdn_prefill`，框架侧） | sglang 98 | **sglang（不变）** | ratio=3 时 fused 版本并不更快（§3.5） |
+| 2 | causal_conv1d（`_causal_conv1d_fwd_kernel`，框架侧） | sglang 439 | **sglang（不变）**，未评估替代实现 | 目前是 GDN 链路里**第二大的单项**；aiter 的 `causal_conv1d_fwd_split_qkv`（conv 与 split 融合）**本次未测**，是下一个值得评估的点 |
+| 3 | gating（`fused_gdn_gating`，框架侧） | sglang 23 | **sglang（不变）** | 占比可忽略 |
+| 4 | q/k l2norm | sglang 79 · aiter 38 · ATOM 38 | **aiter**（随 opt_vk 一起） | sglang 的 l2norm 慢约 2x |
+| 5 | prepare：chunk cumsum + KKT + solve_tril + w/u（WY） | sglang 原版 769 · sglang tuned 514 · ATOM 749–809 · aiter Triton 755 · **aiter FlyDSL `gdn_prepare` 303** | **aiter FlyDSL 融合 prepare**（必须包含 #4952 修复） | 不能用 FlyDSL prepare 时：用 aiter Triton prepare（sglang 的自检会自动回退）；如果要留在 sglang 原生路径，就用 sglang tuned（514） |
+| 6 | **K5 `chunk_gated_delta_rule_fwd_h`** | sglang 原版 1506 · sglang tuned 935 · ATOM 1032–1100 · aiter Triton 1548 · **aiter HIP 596–603** · aiter FlyDSL 506–512 | **aiter HIP K5**（默认）；长单序列可选 FlyDSL（`SGLANG_GDN_AITER_K5=flydsl`） | FlyDSL 在 ≥8k 单序列上约快 15%，但 fork 版不支持 indexed pool（需要 gather/scatter），且在 1k、16×1k 上更慢。HIP 原地读写 pool，各形状表现稳定。aiter main 的 FlyDSL opt K5 支持 indexed pool，升级到 main 后可以考虑改用。BV 调优：启发式（BV=64）已是最优 |
+| 7 | chunk_o（输出） | sglang 原版 645 · sglang tuned 261 · ATOM 509–543 · aiter 原配置 692 · **aiter tuned 229** | **aiter `chunk_fwd_kernel_o_opt_vk` + gfx942 tuned 配置** | aiter main 目前没有这个 tuned 配置（692），需要用本次 aiter 分支，或把 `configs/gfx942/.../gated_delta_rule/DEFAULT.json` 移植过去 |
+| — | 状态读写（gather/scatter/transpose） | aiter（HIP K5）0 · ATOM 30–49 · FlyDSL K5 + gather 28 | aiter HIP K5 | profile 中没有额外的 copy/transpose kernel（§5） |
+
+**为什么阶段 4–7 要整体选 aiter，而不是逐阶段挑最快的拼起来**：各阶段之间的中间张量布局，与它所属的库是绑定的。
+- aiter 的 prepare 输出 head-major 的 `w/u [B,H,T,K]` 和 head-major 的 `g_cumsum`。
+- aiter 的 K5 输出 `h [B,NT,H,V,K]`，以及 head-major 的 `v_new`。aiter 的 chunk_o 按这些布局读取。
+- sglang/ATOM 的 FLA 各阶段全部是 token-major。
+
+如果跨库混搭（例如 sglang prepare + aiter K5，或 aiter K5 + sglang chunk_o），就需要额外的 transpose。其中 w/u/v_new 在 T=12000 时每份约 70 MB。所以阶段 4–7 整体使用 aiter `chunk_gated_delta_rule_opt_vk`（它对外的输入输出与 sglang 完全一致）是最优、也是唯一不会引入额外转换的组合。
+
+**汇总（T=12000，单层）**：
+- 阶段 4–7（chunk 部分）：sglang 原版 3036 µs → sglang tuned 1826 µs → **aiter 1166 µs（2.6x）**。
+- 加上阶段 1–3 的框架开销（约 560 µs，各方案相同）：整层 GDN 从约 3600 µs 降到约 1730 µs。
+- 剩余耗时中，causal_conv1d（约 440 µs）已经和 K5 同一量级，是继续优化 prefill 的下一个目标。
 
 ## 4. Tuning
 
