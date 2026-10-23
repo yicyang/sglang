@@ -1,0 +1,518 @@
+{
+ "meta": {
+  "aiter_file": "/opt/aiter/aiter/__init__.py",
+  "torch": "2.12.0+rocm7.14.0.git6bbd260",
+  "gpu": "AMD Instinct MI308X",
+  "env": {
+   "AITER_USE_SYSTEM_TRITON": "1",
+   "AITER_GPU_ARCHS": "gfx942",
+   "AITER_ASM_DIR": "/opt/aiter/hsa/"
+  }
+ },
+ "results": [
+  {
+   "impl": "sglang_fla_triton",
+   "err_o": 0.0066248695366084576,
+   "err_state": 0.00636768713593483,
+   "clobbers_other_slots": false,
+   "err_o_realgate": 0.0061051202937960625,
+   "err_state_realgate": 0.006308873649686575,
+   "err_o_bad_case0.pt": 0.0,
+   "err_o_bad_case1.pt": 0.0,
+   "err_o_layer0_T2000.pt": 0.0,
+   "correct": true,
+   "1x1024": {
+    "gpu_us": 307.1928000000005,
+    "median_us": 387.6020014286041,
+    "min_us": 374.84198808670044,
+    "p90_us": 418.722003698349,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 17.13800000000025,
+     "chunk_local_cumsum_scalar_kernel.kd": 4.7030000000000545,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 9.074000000000092,
+     "chunk_gated_delta_rule_fwd_kkt_solve_kernel.kd": 37.34299999999995,
+     "recompute_w_u_fwd_kernel.kd": 46.30379999999996,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 135.75969999999998,
+     "chunk_fwd_kernel_o.kd": 56.871300000000204
+    }
+   },
+   "1x2048": {
+    "gpu_us": 552.6738999999998,
+    "median_us": 592.8829908370972,
+    "min_us": 579.243004322052,
+    "p90_us": 609.0030074119568,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 16.66630000000005,
+     "chunk_local_cumsum_scalar_kernel.kd": 6.270999999999913,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 12.490199999999966,
+     "chunk_gated_delta_rule_fwd_kkt_solve_kernel.kd": 53.00729999999989,
+     "recompute_w_u_fwd_kernel.kd": 92.44719999999994,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 261.5048,
+     "chunk_fwd_kernel_o.kd": 110.28710000000007
+    }
+   },
+   "1x4096": {
+    "gpu_us": 1058.8483999999999,
+    "median_us": 1094.6450233459473,
+    "min_us": 1083.2459926605225,
+    "p90_us": 1104.8059463500977,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 28.27009999999991,
+     "chunk_local_cumsum_scalar_kernel.kd": 9.735000000000161,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 16.665999999999745,
+     "chunk_gated_delta_rule_fwd_kkt_solve_kernel.kd": 95.47560000000003,
+     "recompute_w_u_fwd_kernel.kd": 178.82389999999992,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 511.9335999999999,
+     "chunk_fwd_kernel_o.kd": 217.94420000000008
+    }
+   },
+   "1x8192": {
+    "gpu_us": 2071.4376,
+    "median_us": 2079.9310207366943,
+    "min_us": 2074.4500160217285,
+    "p90_us": 2093.5308933258057,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 55.73029999999979,
+     "chunk_local_cumsum_scalar_kernel.kd": 17.259100000000156,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 27.43030000000024,
+     "chunk_gated_delta_rule_fwd_kkt_solve_kernel.kd": 164.34369999999998,
+     "recompute_w_u_fwd_kernel.kd": 352.3768999999995,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 1015.1761000000001,
+     "chunk_fwd_kernel_o.kd": 439.1212000000006
+    }
+   },
+   "1x12000": {
+    "gpu_us": 3035.9185,
+    "median_us": 3044.2559719085693,
+    "min_us": 3036.616086959839,
+    "p90_us": 3051.176071166992,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 78.99049999999988,
+     "chunk_local_cumsum_scalar_kernel.kd": 24.099100000000334,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 37.13009999999983,
+     "chunk_gated_delta_rule_fwd_kkt_solve_kernel.kd": 228.58829999999998,
+     "recompute_w_u_fwd_kernel.kd": 516.0255999999999,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 1505.8826000000004,
+     "chunk_fwd_kernel_o.kd": 645.2022999999998
+    }
+   },
+   "1x16384": {
+    "gpu_us": 4137.884300000002,
+    "median_us": 4145.020961761475,
+    "min_us": 4137.980937957764,
+    "p90_us": 4153.261184692383,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 106.5106000000009,
+     "chunk_local_cumsum_scalar_kernel.kd": 31.619100000000195,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 47.89420000000099,
+     "chunk_gated_delta_rule_fwd_kkt_solve_kernel.kd": 304.4405999999998,
+     "recompute_w_u_fwd_kernel.kd": 707.2706000000009,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 2062.3616999999995,
+     "chunk_fwd_kernel_o.kd": 877.7875000000005
+    }
+   },
+   "4x4096": {
+    "gpu_us": 3404.048300000001,
+    "median_us": 3410.4180335998535,
+    "min_us": 3404.7369956970215,
+    "p90_us": 3414.4580364227295,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 106.31859999999983,
+     "chunk_local_cumsum_scalar_kernel.kd": 31.61920000000027,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 48.07430000000076,
+     "chunk_gated_delta_rule_fwd_kkt_solve_kernel.kd": 304.2445,
+     "recompute_w_u_fwd_kernel.kd": 707.7027,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 1326.0255999999995,
+     "chunk_fwd_kernel_o.kd": 880.0634000000003
+    }
+   },
+   "16x1024": {
+    "gpu_us": 3442.796599999999,
+    "median_us": 3450.498104095459,
+    "min_us": 3442.7781105041504,
+    "p90_us": 3454.3778896331787,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 106.47829999999934,
+     "chunk_local_cumsum_scalar_kernel.kd": 31.395299999999725,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 48.054000000001,
+     "chunk_gated_delta_rule_fwd_kkt_solve_kernel.kd": 304.38059999999933,
+     "recompute_w_u_fwd_kernel.kd": 707.4387000000005,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 1365.5619999999997,
+     "chunk_fwd_kernel_o.kd": 879.4876999999997
+    }
+   },
+   "mix5": {
+    "gpu_us": 3516.2730999999976,
+    "median_us": 3523.0178833007812,
+    "min_us": 3517.4989700317383,
+    "p90_us": 3527.738094329834,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 106.40259999999985,
+     "chunk_local_cumsum_scalar_kernel.kd": 33.04710000000001,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 47.99809999999941,
+     "chunk_gated_delta_rule_fwd_kkt_solve_kernel.kd": 306.2246,
+     "recompute_w_u_fwd_kernel.kd": 711.7385999999991,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 1421.0863999999995,
+     "chunk_fwd_kernel_o.kd": 889.7756999999997
+    }
+   }
+  },
+  {
+   "impl": "atom_chunk_vk",
+   "err_o": 0.008850528858602047,
+   "err_state": 0.00636768713593483,
+   "clobbers_other_slots": false,
+   "err_o_realgate": 0.0061051202937960625,
+   "err_state_realgate": 0.006308873649686575,
+   "err_o_bad_case0.pt": 0.004081632476300001,
+   "err_o_bad_case1.pt": 0.005494505632668734,
+   "err_o_layer0_T2000.pt": 0.0041841003112494946,
+   "correct": true,
+   "1x1024": {
+    "gpu_us": 262.08120000000065,
+    "median_us": 550.5229830741882,
+    "min_us": 532.4029922485352,
+    "p90_us": 648.8029956817627,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 3.395000000000115,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 5.815099999999967,
+     "l2norm_fwd_kernel2.kd": 8.726000000000175,
+     "chunk_local_cumsum_scalar_kernel.kd": 4.054999999999928,
+     "chunk_scaled_dot_kkt_fwd_kernel.kd": 15.7631000000001,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 3.7630000000000905,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 28.299200000000145,
+     "recompute_w_u_fwd_kernel.kd": 44.03109999999996,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64_vk.kd": 98.15139999999991,
+     "chunk_fwd_kernel_o_vk.kd": 45.03920000000003,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 5.043100000000186
+    }
+   },
+   "1x2048": {
+    "gpu_us": 459.52229999999986,
+    "median_us": 654.8029780387878,
+    "min_us": 637.0840072631836,
+    "p90_us": 669.8030233383179,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 4.918999999999963,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 5.319000000000133,
+     "l2norm_fwd_kernel2.kd": 10.781999999999789,
+     "chunk_local_cumsum_scalar_kernel.kd": 5.198999999999892,
+     "chunk_scaled_dot_kkt_fwd_kernel.kd": 25.407299999999953,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 4.6150000000000535,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 42.051299999999934,
+     "recompute_w_u_fwd_kernel.kd": 80.56330000000015,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64_vk.kd": 189.59999999999997,
+     "chunk_fwd_kernel_o_vk.kd": 86.10739999999988,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 4.959000000000196
+    }
+   },
+   "1x4096": {
+    "gpu_us": 855.0403999999997,
+    "median_us": 991.005003452301,
+    "min_us": 968.9649939537048,
+    "p90_us": 1026.1249542236328,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 4.878999999999844,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 5.354999999999942,
+     "l2norm_fwd_kernel2.kd": 16.190099999999713,
+     "chunk_local_cumsum_scalar_kernel.kd": 6.647000000000214,
+     "chunk_scaled_dot_kkt_fwd_kernel.kd": 45.03540000000011,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 6.863000000000012,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 77.86340000000003,
+     "recompute_w_u_fwd_kernel.kd": 147.59960000000012,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64_vk.kd": 372.22899999999987,
+     "chunk_fwd_kernel_o_vk.kd": 167.34779999999992,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 5.031099999999902
+    }
+   },
+   "1x8192": {
+    "gpu_us": 1707.2929000000006,
+    "median_us": 1819.4090127944946,
+    "min_us": 1786.0889434814453,
+    "p90_us": 4489.344120025635,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 4.7509999999999915,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 5.471000000000314,
+     "l2norm_fwd_kernel2.kd": 28.582100000000054,
+     "chunk_local_cumsum_scalar_kernel.kd": 10.455000000000403,
+     "chunk_scaled_dot_kkt_fwd_kernel.kd": 89.03170000000003,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 10.323000000000103,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 146.19579999999996,
+     "recompute_w_u_fwd_kernel.kd": 306.58039999999994,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64_vk.kd": 740.0388999999998,
+     "chunk_fwd_kernel_o_vk.kd": 359.8209,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 6.043100000000004
+    }
+   },
+   "1x12000": {
+    "gpu_us": 2520.5250999999994,
+    "median_us": 2598.0138778686523,
+    "min_us": 2585.012912750244,
+    "p90_us": 2611.694097518921,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 4.75500000000034,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 5.478999999999827,
+     "l2norm_fwd_kernel2.kd": 38.45009999999945,
+     "chunk_local_cumsum_scalar_kernel.kd": 14.222999999999969,
+     "chunk_scaled_dot_kkt_fwd_kernel.kd": 127.69199999999988,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 13.603000000000508,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 207.45999999999955,
+     "recompute_w_u_fwd_kernel.kd": 459.16499999999985,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64_vk.kd": 1100.273,
+     "chunk_fwd_kernel_o_vk.kd": 543.1380000000003,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 6.286999999999761
+    }
+   },
+   "1x16384": {
+    "gpu_us": 3453.3978999999995,
+    "median_us": 3530.658006668091,
+    "min_us": 3518.537998199463,
+    "p90_us": 3537.6179218292236,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 4.750999999999735,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 5.487099999999935,
+     "l2norm_fwd_kernel2.kd": 49.71019999999944,
+     "chunk_local_cumsum_scalar_kernel.kd": 17.77910000000049,
+     "chunk_scaled_dot_kkt_fwd_kernel.kd": 175.28790000000018,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 17.21500000000009,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 281.3125999999999,
+     "recompute_w_u_fwd_kernel.kd": 638.2702000000006,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64_vk.kd": 1510.4787999999994,
+     "chunk_fwd_kernel_o_vk.kd": 746.7989999999998,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 6.307000000000062
+    }
+   },
+   "4x4096": {
+    "gpu_us": 3104.5723,
+    "median_us": 3171.057939529419,
+    "min_us": 3153.4180641174316,
+    "p90_us": 5547.228813171387,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 4.747099999999833,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 11.211000000000675,
+     "l2norm_fwd_kernel2.kd": 49.710499999999676,
+     "chunk_local_cumsum_scalar_kernel.kd": 17.795199999999923,
+     "chunk_scaled_dot_kkt_fwd_kernel.kd": 174.91979999999967,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 17.391200000000026,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 281.4322999999997,
+     "recompute_w_u_fwd_kernel.kd": 637.5943,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64_vk.kd": 1142.949,
+     "chunk_fwd_kernel_o_vk.kd": 750.7707999999997,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 16.051100000000584
+    }
+   },
+   "16x1024": {
+    "gpu_us": 3005.9315,
+    "median_us": 3038.3760929107666,
+    "min_us": 3026.2160301208496,
+    "p90_us": 3050.175905227661,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 4.686999999999881,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 31.443100000000225,
+     "l2norm_fwd_kernel2.kd": 49.226199999999615,
+     "chunk_local_cumsum_scalar_kernel.kd": 17.779100000000117,
+     "chunk_scaled_dot_kkt_fwd_kernel.kd": 175.71990000000028,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 17.47509999999969,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 281.87659999999994,
+     "recompute_w_u_fwd_kernel.kd": 639.7302,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64_vk.kd": 983.6601000000004,
+     "chunk_fwd_kernel_o_vk.kd": 748.9588999999995,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 55.37530000000011
+    }
+   },
+   "mix5": {
+    "gpu_us": 3182.3525000000004,
+    "median_us": 3231.1360836029053,
+    "min_us": 3213.775873184204,
+    "p90_us": 3242.1369552612305,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 4.771000000000291,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 13.063000000000342,
+     "l2norm_fwd_kernel2.kd": 49.78220000000022,
+     "chunk_local_cumsum_scalar_kernel.kd": 19.391400000000008,
+     "chunk_scaled_dot_kkt_fwd_kernel.kd": 176.38759999999994,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 17.45130000000014,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 284.21240000000006,
+     "recompute_w_u_fwd_kernel.kd": 641.9701999999997,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64_vk.kd": 1200.4653999999994,
+     "chunk_fwd_kernel_o_vk.kd": 754.6906000000007,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 20.16739999999963
+    }
+   }
+  },
+  {
+   "impl": "atom_chunk_kv(+transpose)",
+   "err_o": 0.005457705818116665,
+   "err_state": 0.005511373281478882,
+   "clobbers_other_slots": false,
+   "err_o_realgate": 0.0061051202937960625,
+   "err_state_realgate": 0.006308873649686575,
+   "err_o_bad_case0.pt": 0.004081632476300001,
+   "err_o_bad_case1.pt": 0.005837912205606699,
+   "err_o_layer0_T2000.pt": 0.008368200622498989,
+   "correct": true,
+   "1x1024": {
+    "gpu_us": 291.88639999999964,
+    "median_us": 423.64200949668884,
+    "min_us": 406.2019884586334,
+    "p90_us": 438.6419951915741,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 3.5950000000001068,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 5.902999999999973,
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 11.03519999999991,
+     "l2norm_fwd_kernel2.kd": 21.894200000000133,
+     "_fused_cumsum_kkt_kernel.kd": 16.28299999999986,
+     "solve_tril_16x16_kernel.kd": 18.487000000000013,
+     "_fused_merge_recompute_kernel.kd": 68.46719999999979,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 92.97569999999999,
+     "chunk_fwd_kernel_o.kd": 41.815099999999966,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 11.430999999999951
+    }
+   },
+   "1x2048": {
+    "gpu_us": 476.7673000000001,
+    "median_us": 549.6029853820801,
+    "min_us": 533.2419872283936,
+    "p90_us": 564.6430253982544,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 4.926999999999975,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 20.311099999999886,
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 10.39099999999997,
+     "l2norm_fwd_kernel2.kd": 10.766099999999948,
+     "_fused_cumsum_kkt_kernel.kd": 26.68709999999992,
+     "solve_tril_16x16_kernel.kd": 29.747200000000106,
+     "_fused_merge_recompute_kernel.kd": 103.23140000000001,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 179.26390000000006,
+     "chunk_fwd_kernel_o.kd": 80.13540000000009,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 11.307100000000107
+    }
+   },
+   "1x4096": {
+    "gpu_us": 842.0693999999993,
+    "median_us": 873.5640048980713,
+    "min_us": 863.044023513794,
+    "p90_us": 921.8050241470337,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 4.746999999999797,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 20.28709999999995,
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 10.655099999999901,
+     "l2norm_fwd_kernel2.kd": 16.29010000000002,
+     "_fused_cumsum_kkt_kernel.kd": 46.6031999999999,
+     "solve_tril_16x16_kernel.kd": 54.42329999999998,
+     "_fused_merge_recompute_kernel.kd": 170.7078999999998,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 351.2888000000001,
+     "chunk_fwd_kernel_o.kd": 155.75190000000003,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 11.314999999999895
+    }
+   },
+   "1x8192": {
+    "gpu_us": 1636.2855999999997,
+    "median_us": 1644.7279453277588,
+    "min_us": 1630.6480169296265,
+    "p90_us": 1652.3280143737793,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 4.798999999999729,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 20.683100000000216,
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 10.827200000000111,
+     "l2norm_fwd_kernel2.kd": 28.52229999999964,
+     "_fused_cumsum_kkt_kernel.kd": 88.99950000000042,
+     "solve_tril_16x16_kernel.kd": 105.23149999999998,
+     "_fused_merge_recompute_kernel.kd": 325.89649999999995,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 700.0386000000001,
+     "chunk_fwd_kernel_o.kd": 339.4609000000003,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 11.826999999999407
+    }
+   },
+   "1x12000": {
+    "gpu_us": 2377.277299999999,
+    "median_us": 2385.3321075439453,
+    "min_us": 2370.532989501953,
+    "p90_us": 2394.052028656006,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 4.667000000000029,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 21.218999999999777,
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 10.875199999999957,
+     "l2norm_fwd_kernel2.kd": 38.418100000000365,
+     "_fused_cumsum_kkt_kernel.kd": 128.45559999999998,
+     "solve_tril_16x16_kernel.kd": 157.39999999999955,
+     "_fused_merge_recompute_kernel.kd": 463.2173999999999,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 1032.4203,
+     "chunk_fwd_kernel_o.kd": 508.5336999999995,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 12.071000000000094
+    }
+   },
+   "1x16384": {
+    "gpu_us": 3220.8774999999987,
+    "median_us": 3224.416971206665,
+    "min_us": 3216.536045074463,
+    "p90_us": 3229.8169136047363,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 4.8511000000000255,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 10.538999999999715,
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 11.018999999999725,
+     "l2norm_fwd_kernel2.kd": 49.64229999999948,
+     "_fused_cumsum_kkt_kernel.kd": 172.94380000000018,
+     "solve_tril_16x16_kernel.kd": 221.36019999999982,
+     "_fused_merge_recompute_kernel.kd": 618.8582,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 1415.9901000000007,
+     "chunk_fwd_kernel_o.kd": 703.670799999999,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 12.00300000000025
+    }
+   },
+   "4x4096": {
+    "gpu_us": 2941.7002000000007,
+    "median_us": 2950.814962387085,
+    "min_us": 2942.734956741333,
+    "p90_us": 2959.0160846710205,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 4.811000000000438,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 11.235100000000152,
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 28.53910000000003,
+     "l2norm_fwd_kernel2.kd": 49.7501999999996,
+     "_fused_cumsum_kkt_kernel.kd": 172.98800000000048,
+     "solve_tril_16x16_kernel.kd": 221.59200000000044,
+     "_fused_merge_recompute_kernel.kd": 619.1542999999998,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 1087.6447000000003,
+     "chunk_fwd_kernel_o.kd": 707.4985999999999,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 38.48719999999975
+    }
+   },
+   "16x1024": {
+    "gpu_us": 3000.7406,
+    "median_us": 3017.13490486145,
+    "min_us": 3011.0559463500977,
+    "p90_us": 3069.9360370635986,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 4.782999999999805,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 31.395200000000305,
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 98.99559999999994,
+     "l2norm_fwd_kernel2.kd": 49.5822999999999,
+     "_fused_cumsum_kkt_kernel.kd": 173.23600000000002,
+     "solve_tril_16x16_kernel.kd": 222.01199999999977,
+     "_fused_merge_recompute_kernel.kd": 617.3661000000001,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 951.9039999999999,
+     "chunk_fwd_kernel_o.kd": 707.5266999999999,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 143.9397000000003
+    }
+   },
+   "mix5": {
+    "gpu_us": 3017.3525000000004,
+    "median_us": 3027.456045150757,
+    "min_us": 3015.1760578155518,
+    "p90_us": 4289.941787719727,
+    "kernels": {
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 4.89900000000045,
+     "void at::native::(anonymous namespace)::indexSelectSmallIndex<float, long, unsigned int, 2, 2, -2>(at::cuda::detail::TensorInfo<float, unsigned int>, at::cuda::detail::TensorInfo<float const, unsigned int>, at::cuda::detail::TensorInfo<long const, unsigned int>, int, int, unsigned int, long) [clone .kd]": 13.063000000000297,
+     "void at::native::elementwise_kernel_manual_unroll<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int, bool)#1}) [clone .kd]": 34.72320000000026,
+     "l2norm_fwd_kernel2.kd": 49.73820000000062,
+     "_fused_cumsum_kkt_kernel.kd": 174.2960000000002,
+     "solve_tril_16x16_kernel.kd": 221.10799999999946,
+     "_fused_merge_recompute_kernel.kd": 623.8544,
+     "chunk_gated_delta_rule_fwd_kernel_h_blockdim64.kd": 1139.1807999999996,
+     "chunk_fwd_kernel_o.kd": 709.2387000000004,
+     "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}>(long, at::native::index_copy_kernel_impl<at::native::OpaqueType<4> >(at::TensorIterator&, long, long, long)::{lambda(int)#1}) [clone .kd]": 47.251199999999386
+    }
+   }
+  }
+ ]
+}

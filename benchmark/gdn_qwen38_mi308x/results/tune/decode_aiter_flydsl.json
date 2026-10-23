@@ -1,0 +1,461 @@
+{
+ "1": {
+  "default_us": 8.727999776601791,
+  "best_us": 7.576099783182144,
+  "best": {
+   "NUM_BLOCKS_PER_V_DIM": 8,
+   "NUM_WARPS": 1,
+   "WARP_THREADS_K": 16
+  },
+  "top5": [
+   [
+    7.576099783182144,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 8,
+     "NUM_WARPS": 1,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    7.580000162124634,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 8,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 8
+    }
+   ],
+   [
+    7.707999646663666,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 8
+    }
+   ],
+   [
+    7.712099701166153,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 8,
+     "NUM_WARPS": 1,
+     "WARP_THREADS_K": 4
+    }
+   ],
+   [
+    7.8359998762607574,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 4,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 16
+    }
+   ]
+  ]
+ },
+ "2": {
+  "default_us": 11.396099627017975,
+  "best_us": 10.468000173568726,
+  "best": {
+   "NUM_BLOCKS_PER_V_DIM": 8,
+   "NUM_WARPS": 2,
+   "WARP_THREADS_K": 16
+  },
+  "top5": [
+   [
+    10.468000173568726,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 8,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    10.520000010728836,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 8,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 8
+    }
+   ],
+   [
+    10.56009978055954,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 8,
+     "NUM_WARPS": 4,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    10.627999901771545,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 8,
+     "NUM_WARPS": 1,
+     "WARP_THREADS_K": 8
+    }
+   ],
+   [
+    10.66799983382225,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 4,
+     "WARP_THREADS_K": 8
+    }
+   ]
+  ]
+ },
+ "4": {
+  "default_us": 16.260099411010742,
+  "best_us": 13.971999287605286,
+  "best": {
+   "NUM_BLOCKS_PER_V_DIM": 2,
+   "NUM_WARPS": 4,
+   "WARP_THREADS_K": 16
+  },
+  "top5": [
+   [
+    13.971999287605286,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 4,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    14.307999610900879,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 8
+    }
+   ],
+   [
+    14.48809951543808,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 1,
+     "WARP_THREADS_K": 4
+    }
+   ],
+   [
+    14.608000218868256,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 4
+    }
+   ],
+   [
+    14.768099784851074,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 4,
+     "WARP_THREADS_K": 8
+    }
+   ]
+  ]
+ },
+ "8": {
+  "default_us": 19.23609972000122,
+  "best_us": 19.436100125312805,
+  "best": {
+   "NUM_BLOCKS_PER_V_DIM": 1,
+   "NUM_WARPS": 4,
+   "WARP_THREADS_K": 8
+  },
+  "top5": [
+   [
+    19.436100125312805,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 4,
+     "WARP_THREADS_K": 8
+    }
+   ],
+   [
+    19.72009986639023,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 4
+    }
+   ],
+   [
+    19.868099689483643,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 4,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    20.300200581550598,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 8
+    }
+   ],
+   [
+    20.468099415302277,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 4,
+     "WARP_THREADS_K": 16
+    }
+   ]
+  ]
+ },
+ "16": {
+  "default_us": 34.160199761390686,
+  "best_us": 34.01620090007782,
+  "best": {
+   "NUM_BLOCKS_PER_V_DIM": 1,
+   "NUM_WARPS": 4,
+   "WARP_THREADS_K": 8
+  },
+  "top5": [
+   [
+    34.01620090007782,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 4,
+     "WARP_THREADS_K": 8
+    }
+   ],
+   [
+    34.44820046424866,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 4,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    35.05609929561615,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 4
+    }
+   ],
+   [
+    36.16819977760315,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 4,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    36.40410006046295,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 4,
+     "NUM_WARPS": 1,
+     "WARP_THREADS_K": 16
+    }
+   ]
+  ]
+ },
+ "24": {
+  "default_us": 51.16829872131348,
+  "best_us": 43.77630054950714,
+  "best": {
+   "NUM_BLOCKS_PER_V_DIM": 4,
+   "NUM_WARPS": 1,
+   "WARP_THREADS_K": 16
+  },
+  "top5": [
+   [
+    43.77630054950714,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 4,
+     "NUM_WARPS": 1,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    44.78029906749725,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 4,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    45.72420120239258,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 4,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    46.240198612213135,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    48.00429940223694,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 1,
+     "WARP_THREADS_K": 8
+    }
+   ]
+  ]
+ },
+ "32": {
+  "default_us": 60.86840033531189,
+  "best_us": 50.53219795227051,
+  "best": {
+   "NUM_BLOCKS_PER_V_DIM": 4,
+   "NUM_WARPS": 1,
+   "WARP_THREADS_K": 16
+  },
+  "top5": [
+   [
+    50.53219795227051,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 4,
+     "NUM_WARPS": 1,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    52.14430093765259,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 4,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    54.032301902770996,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    56.28430247306824,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 4
+    }
+   ],
+   [
+    56.288301944732666,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 8
+    }
+   ]
+  ]
+ },
+ "48": {
+  "default_us": 89.02850151062012,
+  "best_us": 63.36830258369446,
+  "best": {
+   "NUM_BLOCKS_PER_V_DIM": 4,
+   "NUM_WARPS": 1,
+   "WARP_THREADS_K": 16
+  },
+  "top5": [
+   [
+    63.36830258369446,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 4,
+     "NUM_WARPS": 1,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    66.70830249786377,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 4,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    68.2964026927948,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    76.10039710998535,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 1,
+     "WARP_THREADS_K": 8
+    }
+   ],
+   [
+    76.15240216255188,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 8
+    }
+   ]
+  ]
+ },
+ "64": {
+  "default_us": 115.91260433197021,
+  "best_us": 76.34040117263794,
+  "best": {
+   "NUM_BLOCKS_PER_V_DIM": 4,
+   "NUM_WARPS": 1,
+   "WARP_THREADS_K": 16
+  },
+  "top5": [
+   [
+    76.34040117263794,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 4,
+     "NUM_WARPS": 1,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    80.32439947128296,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    81.37649893760681,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 4,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    90.02439975738525,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 1,
+     "WARP_THREADS_K": 8
+    }
+   ],
+   [
+    91.9044017791748,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 8
+    }
+   ]
+  ]
+ }
+}

@@ -1,0 +1,11 @@
+T=     1: unfused     21.3 us | fused     42.7 us | bit-identical=True
+T=     8: unfused     36.2 us | fused     40.8 us | bit-identical=True
+T=    32: unfused     35.5 us | fused     41.1 us | bit-identical=True
+T=  2048: unfused     50.4 us | fused     39.8 us | bit-identical=True
+T= 12000: unfused    250.0 us | fused    294.5 us | bit-identical=True
+T= 16384: unfused    363.0 us | fused    399.5 us | bit-identical=True
+GPU T=     1: unfused     3.6 us (1 kernels) | fused     3.9 us (1 kernels)
+GPU T=     8: unfused     7.7 us (3 kernels) | fused     4.1 us (1 kernels)
+GPU T=    32: unfused     9.4 us (3 kernels) | fused     4.2 us (1 kernels)
+GPU T=  2048: unfused    53.2 us (3 kernels) | fused    33.1 us (1 kernels)
+GPU T= 12000: unfused   251.0 us (3 kernels) | fused   290.1 us (1 kernels)

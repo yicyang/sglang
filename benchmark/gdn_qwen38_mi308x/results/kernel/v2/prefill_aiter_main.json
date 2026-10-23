@@ -1,0 +1,662 @@
+{
+ "meta": {
+  "aiter_file": "/root/workspace/gdn_optimization/aiter_main/aiter/__init__.py",
+  "torch": "2.12.0+rocm7.14.0.git6bbd260",
+  "gpu": "AMD Instinct MI308X",
+  "env": {
+   "AITER_USE_SYSTEM_TRITON": "1",
+   "AITER_GPU_ARCHS": "gfx942",
+   "AITER_ASM_DIR": "/root/workspace/gdn_optimization/aiter_main/hsa/"
+  }
+ },
+ "results": [
+  {
+   "impl": "aiter_main:opt_vk_triton",
+   "err_o": 0.008850528858602047,
+   "err_state": 0.00636768713593483,
+   "clobbers_other_slots": false,
+   "err_o_realgate": 0.0061051202937960625,
+   "err_state_realgate": 0.006308873649686575,
+   "err_o_bad_case0.pt": 0.004081632476300001,
+   "err_o_bad_case1.pt": 0.005494505632668734,
+   "err_o_layer0_T2000.pt": 0.0041841003112494946,
+   "correct": true,
+   "1x1024": {
+    "gpu_us": 262.2437000000003,
+    "median_us": 344.52199935913086,
+    "min_us": 333.12198519706726,
+    "p90_us": 366.7219877243042,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 14.462000000000181,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 15.415200000000116,
+     "fused_solve_tril_recompute_w_u_kernel.kd": 46.351500000000144,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 133.78389999999993,
+     "chunk_fwd_kernel_o_opt_vk.kd": 52.2310999999999
+    }
+   },
+   "1x2048": {
+    "gpu_us": 493.4926999999998,
+    "median_us": 532.6830148696899,
+    "min_us": 527.3230075836182,
+    "p90_us": 546.0420250892639,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 11.45820000000006,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 25.53519999999982,
+     "fused_solve_tril_recompute_w_u_kernel.kd": 90.77560000000003,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 257.84429999999986,
+     "chunk_fwd_kernel_o_opt_vk.kd": 107.87940000000006
+    }
+   },
+   "1x4096": {
+    "gpu_us": 1002.6701999999999,
+    "median_us": 1035.1660251617432,
+    "min_us": 1021.685004234314,
+    "p90_us": 1094.2449569702148,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 16.07799999999994,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 45.41129999999997,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 129.83960000000016,
+     "recompute_w_u_head_major_kernel.kd": 92.2955999999997,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 503.3695000000001,
+     "chunk_fwd_kernel_o_opt_vk.kd": 215.67620000000002
+    }
+   },
+   "1x8192": {
+    "gpu_us": 2031.3233999999998,
+    "median_us": 2039.2909049987793,
+    "min_us": 2034.2109203338623,
+    "p90_us": 2045.2110767364502,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 28.12220000000024,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 89.01139999999992,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 243.5842000000001,
+     "recompute_w_u_head_major_kernel.kd": 190.03199999999973,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 1013.8761999999997,
+     "chunk_fwd_kernel_o_opt_vk.kd": 466.69739999999996
+    }
+   },
+   "1x12000": {
+    "gpu_us": 3065.9687000000004,
+    "median_us": 3060.8160495758057,
+    "min_us": 3057.29603767395,
+    "p90_us": 3066.7760372161865,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 38.27429999999979,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 126.5595000000005,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 357.1249000000003,
+     "recompute_w_u_head_major_kernel.kd": 283.4804,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 1554.5031000000004,
+     "chunk_fwd_kernel_o_opt_vk.kd": 706.0264999999996
+    }
+   },
+   "1x16384": {
+    "gpu_us": 4244.178800000001,
+    "median_us": 4257.421970367432,
+    "min_us": 4246.0618019104,
+    "p90_us": 4266.901016235352,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.202300000000925,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 172.79990000000012,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 486.8134999999997,
+     "recompute_w_u_head_major_kernel.kd": 397.22100000000034,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 2171.1780999999996,
+     "chunk_fwd_kernel_o_opt_vk.kd": 966.9639999999996
+    }
+   },
+   "4x4096": {
+    "gpu_us": 3857.7607,
+    "median_us": 3866.6598796844482,
+    "min_us": 3859.3389987945557,
+    "p90_us": 3870.300054550171,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.00229999999965,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 173.05590000000043,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 487.43339999999904,
+     "recompute_w_u_head_major_kernel.kd": 397.0089999999998,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 1789.9442000000006,
+     "chunk_fwd_kernel_o_opt_vk.kd": 961.3159000000003
+    }
+   },
+   "16x1024": {
+    "gpu_us": 3877.3929000000007,
+    "median_us": 3881.9000720977783,
+    "min_us": 3876.178979873657,
+    "p90_us": 3885.740041732788,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.06240000000129,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 173.6719999999999,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 487.96910000000025,
+     "recompute_w_u_head_major_kernel.kd": 397.40099999999956,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 1811.2365999999997,
+     "chunk_fwd_kernel_o_opt_vk.kd": 958.0518000000003
+    }
+   },
+   "mix5": {
+    "gpu_us": 3904.2652000000007,
+    "median_us": 3913.1810665130615,
+    "min_us": 3903.3799171447754,
+    "p90_us": 3919.7800159454346,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.014299999999565,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 174.108,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 492.26959999999957,
+     "recompute_w_u_head_major_kernel.kd": 396.7730000000004,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 1825.7923000000008,
+     "chunk_fwd_kernel_o_opt_vk.kd": 966.3080000000002
+    }
+   }
+  },
+  {
+   "impl": "aiter_main:opt_vk_hipK5",
+   "err_o": 0.009022725746035576,
+   "err_state": 0.006540308240801096,
+   "clobbers_other_slots": false,
+   "err_o_realgate": 0.006146855652332306,
+   "err_state_realgate": 0.007256411015987396,
+   "err_o_bad_case0.pt": 0.004081632476300001,
+   "err_o_bad_case1.pt": 0.005494505632668734,
+   "err_o_layer0_T2000.pt": 0.008368200622498989,
+   "correct": true,
+   "1x1024": {
+    "gpu_us": 181.55489999999952,
+    "median_us": 317.96199083328247,
+    "min_us": 293.88099908828735,
+    "p90_us": 363.0009889602661,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 13.846199999999907,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 15.598999999999839,
+     "fused_solve_tril_recompute_w_u_kernel.kd": 46.60319999999993,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 53.05930000000003,
+     "chunk_fwd_kernel_o_opt_vk.kd": 52.447199999999825
+    }
+   },
+   "1x2048": {
+    "gpu_us": 335.2435999999999,
+    "median_us": 393.96199584007263,
+    "min_us": 375.64200162887573,
+    "p90_us": 409.1230034828186,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 10.925999999999961,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 26.05500000000005,
+     "fused_solve_tril_recompute_w_u_kernel.kd": 91.10360000000001,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 98.89149999999991,
+     "chunk_fwd_kernel_o_opt_vk.kd": 108.26749999999998
+    }
+   },
+   "1x4096": {
+    "gpu_us": 697.4365999999997,
+    "median_us": 740.6439781188965,
+    "min_us": 725.8440256118774,
+    "p90_us": 752.4840235710144,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 16.60599999999978,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 45.75529999999987,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 130.9157000000001,
+     "recompute_w_u_head_major_kernel.kd": 95.0793999999999,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 191.58000000000004,
+     "chunk_fwd_kernel_o_opt_vk.kd": 217.50019999999992
+    }
+   },
+   "1x8192": {
+    "gpu_us": 1416.2443000000003,
+    "median_us": 1429.0469884872437,
+    "min_us": 1414.126992225647,
+    "p90_us": 1444.206953048706,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 28.34599999999989,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 89.42759999999988,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 247.3083000000001,
+     "recompute_w_u_head_major_kernel.kd": 190.06790000000032,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 399.3252000000001,
+     "chunk_fwd_kernel_o_opt_vk.kd": 461.76930000000004
+    }
+   },
+   "1x12000": {
+    "gpu_us": 2104.7798999999995,
+    "median_us": 2130.450963973999,
+    "min_us": 2112.5309467315674,
+    "p90_us": 2208.2509994506836,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 38.19009999999943,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 126.89180000000023,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 357.1767999999999,
+     "recompute_w_u_head_major_kernel.kd": 286.0564000000001,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 604.4101,
+     "chunk_fwd_kernel_o_opt_vk.kd": 692.0546999999998
+    }
+   },
+   "1x16384": {
+    "gpu_us": 2883.6640000000007,
+    "median_us": 2898.175001144409,
+    "min_us": 2889.1348838806152,
+    "p90_us": 2903.7749767303467,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.05430000000001,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 172.8199,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 487.84140000000025,
+     "recompute_w_u_head_major_kernel.kd": 396.18120000000016,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 827.5633,
+     "chunk_fwd_kernel_o_opt_vk.kd": 950.2039
+    }
+   },
+   "4x4096": {
+    "gpu_us": 2698.3349000000003,
+    "median_us": 2713.0939960479736,
+    "min_us": 2707.413911819458,
+    "p90_us": 2715.8539295196533,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.19040000000012,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 173.23980000000017,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 487.6496999999998,
+     "recompute_w_u_head_major_kernel.kd": 396.40499999999986,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 634.1460000000004,
+     "chunk_fwd_kernel_o_opt_vk.kd": 957.704
+    }
+   },
+   "16x1024": {
+    "gpu_us": 2633.3427,
+    "median_us": 2643.493890762329,
+    "min_us": 2632.4939727783203,
+    "p90_us": 2894.4149017333984,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.15429999999962,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 173.11179999999985,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 487.23759999999993,
+     "recompute_w_u_head_major_kernel.kd": 396.3730000000003,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 569.8499999999998,
+     "chunk_fwd_kernel_o_opt_vk.kd": 957.6160000000003
+    }
+   },
+   "mix5": {
+    "gpu_us": 2768.2835999999993,
+    "median_us": 2783.813953399658,
+    "min_us": 2775.49409866333,
+    "p90_us": 3243.1368827819824,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 48.96620000000023,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 174.56789999999958,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 492.31760000000025,
+     "recompute_w_u_head_major_kernel.kd": 396.34509999999983,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 690.5225999999998,
+     "chunk_fwd_kernel_o_opt_vk.kd": 965.5641999999997
+    }
+   }
+  },
+  {
+   "impl": "aiter_main:opt_vk_flydslK5",
+   "err_o": 0.009022725746035576,
+   "err_state": 0.006540308240801096,
+   "clobbers_other_slots": false,
+   "err_o_realgate": 0.006146855652332306,
+   "err_state_realgate": 0.007256411015987396,
+   "err_o_bad_case0.pt": 0.004081632476300001,
+   "err_o_bad_case1.pt": 0.005494505632668734,
+   "err_o_layer0_T2000.pt": 0.008368200622498989,
+   "correct": true,
+   "1x1024": {
+    "gpu_us": 175.79489999999998,
+    "median_us": 301.60099267959595,
+    "min_us": 285.1620018482208,
+    "p90_us": 318.4010088443756,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 12.426200000000005,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 15.695100000000071,
+     "fused_solve_tril_recompute_w_u_kernel.kd": 46.62719999999997,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 47.96330000000008,
+     "chunk_fwd_kernel_o_opt_vk.kd": 53.083099999999845
+    }
+   },
+   "1x2048": {
+    "gpu_us": 324.3399,
+    "median_us": 385.16199588775635,
+    "min_us": 375.2419948577881,
+    "p90_us": 398.2419967651367,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 11.002200000000126,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 26.107099999999978,
+     "fused_solve_tril_recompute_w_u_kernel.kd": 91.39569999999999,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 87.03529999999986,
+     "chunk_fwd_kernel_o_opt_vk.kd": 108.79960000000003
+    }
+   },
+   "1x4096": {
+    "gpu_us": 672.2405000000001,
+    "median_us": 719.9640274047852,
+    "min_us": 709.8439931869507,
+    "p90_us": 738.4830117225647,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 16.354100000000066,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 46.60720000000001,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 130.65569999999997,
+     "recompute_w_u_head_major_kernel.kd": 94.02750000000002,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 167.05580000000006,
+     "chunk_fwd_kernel_o_opt_vk.kd": 217.54020000000008
+    }
+   },
+   "1x8192": {
+    "gpu_us": 1359.2360000000008,
+    "median_us": 1378.3680200576782,
+    "min_us": 1367.0469522476196,
+    "p90_us": 1388.84699344635,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 28.5100000000001,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 89.02749999999993,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 243.78450000000012,
+     "recompute_w_u_head_major_kernel.kd": 189.81600000000003,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 345.30060000000043,
+     "chunk_fwd_kernel_o_opt_vk.kd": 462.7974000000002
+    }
+   },
+   "1x12000": {
+    "gpu_us": 2006.3113000000003,
+    "median_us": 2037.1298789978027,
+    "min_us": 2026.69095993042,
+    "p90_us": 2051.210880279541,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 37.954099999999684,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 127.13970000000045,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 357.12879999999944,
+     "recompute_w_u_head_major_kernel.kd": 286.0885000000006,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 508.3937000000001,
+     "chunk_fwd_kernel_o_opt_vk.kd": 689.6065
+    }
+   },
+   "1x16384": {
+    "gpu_us": 2766.3632,
+    "median_us": 2777.0140171051025,
+    "min_us": 2771.293878555298,
+    "p90_us": 2782.9740047454834,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.2262000000004,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 173.00390000000024,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 487.333599999999,
+     "recompute_w_u_head_major_kernel.kd": 396.7570000000005,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 707.1146999999995,
+     "chunk_fwd_kernel_o_opt_vk.kd": 952.9277999999998
+    }
+   },
+   "4x4096": {
+    "gpu_us": 2617.682499999999,
+    "median_us": 2625.6940364837646,
+    "min_us": 2622.5340366363525,
+    "p90_us": 2631.2129497528076,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.03829999999946,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 172.7519,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 487.48959999999994,
+     "recompute_w_u_head_major_kernel.kd": 397.657,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 550.4817,
+     "chunk_fwd_kernel_o_opt_vk.kd": 960.2639999999999
+    }
+   },
+   "16x1024": {
+    "gpu_us": 2575.2983,
+    "median_us": 2586.333990097046,
+    "min_us": 2576.0130882263184,
+    "p90_us": 2792.4139499664307,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 48.93029999999999,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 172.80790000000022,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 487.44550000000027,
+     "recompute_w_u_head_major_kernel.kd": 397.5769999999995,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 510.9296999999997,
+     "chunk_fwd_kernel_o_opt_vk.kd": 957.6079000000001
+    }
+   },
+   "mix5": {
+    "gpu_us": 2671.6548000000003,
+    "median_us": 2674.0939617156982,
+    "min_us": 2669.574022293091,
+    "p90_us": 2682.934045791626,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.0182999999999,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 173.92790000000005,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 493.75760000000054,
+     "recompute_w_u_head_major_kernel.kd": 396.94100000000003,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 591.8099999999996,
+     "chunk_fwd_kernel_o_opt_vk.kd": 966.2000000000005
+    }
+   }
+  },
+  {
+   "impl": "aiter_main:opt_vk_flydslPrep+hipK5",
+   "err_o": 0.009022725746035576,
+   "err_state": 0.006540308240801096,
+   "clobbers_other_slots": false,
+   "err_o_realgate": 0.006494385190308094,
+   "err_state_realgate": 0.007256411015987396,
+   "err_o_bad_case0.pt": 0.004081632476300001,
+   "err_o_bad_case1.pt": 0.005837912205606699,
+   "err_o_layer0_T2000.pt": 0.008368200622498989,
+   "correct": true,
+   "1x1024": {
+    "gpu_us": 151.65589999999997,
+    "median_us": 260.5609893798828,
+    "min_us": 243.0810034275055,
+    "p90_us": 391.24199748039246,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 12.53010000000029,
+     "gdn_prepare_kernel.kd": 32.77929999999987,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 53.387200000000206,
+     "chunk_fwd_kernel_o_opt_vk.kd": 52.95929999999962
+    }
+   },
+   "1x2048": {
+    "gpu_us": 276.51649999999995,
+    "median_us": 336.04198694229126,
+    "min_us": 321.44099473953247,
+    "p90_us": 383.04200768470764,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 10.8622,
+     "gdn_prepare_kernel.kd": 58.33129999999993,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 98.6195,
+     "chunk_fwd_kernel_o_opt_vk.kd": 108.70349999999999
+    }
+   },
+   "1x4096": {
+    "gpu_us": 530.1379,
+    "median_us": 556.322991847992,
+    "min_us": 544.6820259094238,
+    "p90_us": 577.3220062255859,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 16.245999999999906,
+     "gdn_prepare_kernel.kd": 108.39970000000002,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 190.33999999999995,
+     "chunk_fwd_kernel_o_opt_vk.kd": 215.1522
+    }
+   },
+   "1x8192": {
+    "gpu_us": 1087.9967000000001,
+    "median_us": 1097.965955734253,
+    "min_us": 1092.4060344696045,
+    "p90_us": 1108.1249713897705,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 28.210200000000082,
+     "gdn_prepare_kernel.kd": 207.9761,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 387.82899999999984,
+     "chunk_fwd_kernel_o_opt_vk.kd": 463.9814000000001
+    }
+   },
+   "1x12000": {
+    "gpu_us": 1628.7991999999995,
+    "median_us": 1641.8880224227905,
+    "min_us": 1633.847951889038,
+    "p90_us": 1653.8490056991577,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 38.13809999999996,
+     "gdn_prepare_kernel.kd": 301.8325000000001,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 596.6580999999998,
+     "chunk_fwd_kernel_o_opt_vk.kd": 692.1704999999998
+    }
+   },
+   "1x16384": {
+    "gpu_us": 2231.722400000001,
+    "median_us": 2245.9309101104736,
+    "min_us": 2239.691972732544,
+    "p90_us": 3179.1369915008545,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.47010000000047,
+     "gdn_prepare_kernel.kd": 405.2572000000004,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 822.0270999999999,
+     "chunk_fwd_kernel_o_opt_vk.kd": 954.9680000000003
+    }
+   },
+   "4x4096": {
+    "gpu_us": 2056.1657000000005,
+    "median_us": 2067.2900676727295,
+    "min_us": 2062.411069869995,
+    "p90_us": 2069.7710514068604,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.61040000000016,
+     "gdn_prepare_kernel.kd": 404.4051,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 639.1142000000001,
+     "chunk_fwd_kernel_o_opt_vk.kd": 963.0360000000001
+    }
+   },
+   "16x1024": {
+    "gpu_us": 1987.7413999999997,
+    "median_us": 2000.3299713134766,
+    "min_us": 1995.9700107574463,
+    "p90_us": 2004.2901039123535,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.654399999999484,
+     "gdn_prepare_kernel.kd": 400.893,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 579.114,
+     "chunk_fwd_kernel_o_opt_vk.kd": 958.0800000000002
+    }
+   },
+   "mix5": {
+    "gpu_us": 2141.2459999999996,
+    "median_us": 2159.2109203338623,
+    "min_us": 2155.2109718322754,
+    "p90_us": 3629.098892211914,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.53049999999969,
+     "gdn_prepare_kernel.kd": 429.4053000000001,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false, true>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, void*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 687.6301999999998,
+     "chunk_fwd_kernel_o_opt_vk.kd": 974.68
+    }
+   }
+  },
+  {
+   "impl": "aiter_main:opt_vk_flydslPrep+flydslK5",
+   "err_o": 0.009022725746035576,
+   "err_state": 0.006540308240801096,
+   "clobbers_other_slots": false,
+   "err_o_realgate": 0.006494385190308094,
+   "err_state_realgate": 0.007256411015987396,
+   "err_o_bad_case0.pt": 0.004081632476300001,
+   "err_o_bad_case1.pt": 0.005837912205606699,
+   "err_o_layer0_T2000.pt": 0.008368200622498989,
+   "correct": true,
+   "1x1024": {
+    "gpu_us": 145.51980000000003,
+    "median_us": 213.6009931564331,
+    "min_us": 202.92100310325623,
+    "p90_us": 228.80099713802338,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 12.838099999999951,
+     "gdn_prepare_kernel.kd": 32.17910000000002,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 47.67520000000011,
+     "chunk_fwd_kernel_o_opt_vk.kd": 52.82739999999997
+    }
+   },
+   "1x2048": {
+    "gpu_us": 265.33660000000003,
+    "median_us": 278.9210081100464,
+    "min_us": 268.4819996356964,
+    "p90_us": 288.00100088119507,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 10.858000000000096,
+     "gdn_prepare_kernel.kd": 58.32339999999996,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 87.54749999999997,
+     "chunk_fwd_kernel_o_opt_vk.kd": 108.60770000000004
+    }
+   },
+   "1x4096": {
+    "gpu_us": 506.14570000000003,
+    "median_us": 521.0430026054382,
+    "min_us": 512.8419995307922,
+    "p90_us": 768.3240175247192,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 15.798199999999987,
+     "gdn_prepare_kernel.kd": 108.41550000000024,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 166.52399999999994,
+     "chunk_fwd_kernel_o_opt_vk.kd": 215.40799999999993
+    }
+   },
+   "1x8192": {
+    "gpu_us": 1037.6604000000002,
+    "median_us": 1038.884997367859,
+    "min_us": 1032.8049659729004,
+    "p90_us": 1048.3249425888062,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 28.18220000000037,
+     "gdn_prepare_kernel.kd": 208.10009999999983,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 337.4847,
+     "chunk_fwd_kernel_o_opt_vk.kd": 463.89339999999993
+    }
+   },
+   "1x12000": {
+    "gpu_us": 1540.9790000000003,
+    "median_us": 1550.8079528808594,
+    "min_us": 1547.0080375671387,
+    "p90_us": 1554.8880100250244,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 38.19800000000021,
+     "gdn_prepare_kernel.kd": 301.88100000000014,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 508.469,
+     "chunk_fwd_kernel_o_opt_vk.kd": 692.4309999999999
+    }
+   },
+   "1x16384": {
+    "gpu_us": 2110.053900000001,
+    "median_us": 2113.4109497070312,
+    "min_us": 2108.130931854248,
+    "p90_us": 2117.9308891296387,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.61440000000107,
+     "gdn_prepare_kernel.kd": 404.02909999999997,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 701.8265000000005,
+     "chunk_fwd_kernel_o_opt_vk.kd": 954.5838999999991
+    }
+   },
+   "4x4096": {
+    "gpu_us": 1969.9929999999995,
+    "median_us": 1984.570026397705,
+    "min_us": 1979.6899557113647,
+    "p90_us": 1987.130045890808,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.43010000000023,
+     "gdn_prepare_kernel.kd": 403.7010999999998,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 555.4858999999997,
+     "chunk_fwd_kernel_o_opt_vk.kd": 961.3758999999998
+    }
+   },
+   "16x1024": {
+    "gpu_us": 1928.8890000000001,
+    "median_us": 1935.9300136566162,
+    "min_us": 1930.8500289916992,
+    "p90_us": 1940.6100511550903,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.65000000000015,
+     "gdn_prepare_kernel.kd": 400.9690000000003,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 519.8579999999998,
+     "chunk_fwd_kernel_o_opt_vk.kd": 958.4119999999997
+    }
+   },
+   "mix5": {
+    "gpu_us": 2043.1575999999995,
+    "median_us": 2059.3299865722656,
+    "min_us": 2047.8899478912354,
+    "p90_us": 2062.251091003418,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.68230000000005,
+     "gdn_prepare_kernel.kd": 429.40110000000044,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 589.1339999999997,
+     "chunk_fwd_kernel_o_opt_vk.kd": 974.9401999999994
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,130 @@
+{
+ "meta": {
+  "aiter_file": "/root/workspace/gdn_optimization/aiter_main/aiter/__init__.py",
+  "torch": "2.12.0+rocm7.14.0.git6bbd260",
+  "gpu": "AMD Instinct MI308X",
+  "env": {
+   "FLYDSL_K5_OPT_BV": "32",
+   "AITER_USE_SYSTEM_TRITON": "1",
+   "AITER_GPU_ARCHS": "gfx942",
+   "AITER_ASM_DIR": "/root/workspace/gdn_optimization/aiter_main/hsa/"
+  }
+ },
+ "results": [
+  {
+   "impl": "aiter_main:opt_vk_flydslPrep+flydslK5",
+   "err_o": 0.009022725746035576,
+   "err_state": 0.006540308240801096,
+   "clobbers_other_slots": false,
+   "correct": true,
+   "1x1024": {
+    "gpu_us": 162.1758999999999,
+    "median_us": 218.24200451374054,
+    "min_us": 208.84199440479279,
+    "p90_us": 247.0020055770874,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 13.138099999999975,
+     "gdn_prepare_kernel.kd": 31.750999999999884,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 64.71170000000008,
+     "chunk_fwd_kernel_o_opt_vk.kd": 52.57509999999997
+    }
+   },
+   "1x2048": {
+    "gpu_us": 298.2684999999999,
+    "median_us": 322.52198457717896,
+    "min_us": 312.3610019683838,
+    "p90_us": 336.36099100112915,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 11.142099999999889,
+     "gdn_prepare_kernel.kd": 57.787399999999955,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 121.96350000000001,
+     "chunk_fwd_kernel_o_opt_vk.kd": 107.37550000000006
+    }
+   },
+   "1x4096": {
+    "gpu_us": 574.2899,
+    "median_us": 591.8430089950562,
+    "min_us": 585.4430198669434,
+    "p90_us": 603.9630174636841,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 16.070100000000032,
+     "gdn_prepare_kernel.kd": 107.91949999999993,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 234.90419999999995,
+     "chunk_fwd_kernel_o_opt_vk.kd": 215.3961
+    }
+   },
+   "1x8192": {
+    "gpu_us": 1176.0691000000002,
+    "median_us": 1181.965947151184,
+    "min_us": 1174.8460531234741,
+    "p90_us": 1200.4059553146362,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 27.99429999999991,
+     "gdn_prepare_kernel.kd": 207.0721000000001,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 477.75320000000016,
+     "chunk_fwd_kernel_o_opt_vk.kd": 463.2495
+    }
+   },
+   "1x12000": {
+    "gpu_us": 1778.7798999999995,
+    "median_us": 1790.4490232467651,
+    "min_us": 1781.9689512252808,
+    "p90_us": 1806.3290119171143,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 38.20609999999969,
+     "gdn_prepare_kernel.kd": 300.5208000000002,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 741.5866000000001,
+     "chunk_fwd_kernel_o_opt_vk.kd": 698.4663999999996
+    }
+   },
+   "1x16384": {
+    "gpu_us": 2452.2592999999997,
+    "median_us": 2466.372013092041,
+    "min_us": 2458.211898803711,
+    "p90_us": 2473.691940307617,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.34629999999968,
+     "gdn_prepare_kernel.kd": 402.94500000000005,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 1038.636,
+     "chunk_fwd_kernel_o_opt_vk.kd": 961.332
+    }
+   },
+   "4x4096": {
+    "gpu_us": 2133.3219000000004,
+    "median_us": 2149.9710083007812,
+    "min_us": 2146.2509632110596,
+    "p90_us": 2158.0910682678223,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 48.95010000000022,
+     "gdn_prepare_kernel.kd": 403.63329999999996,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 719.6784999999999,
+     "chunk_fwd_kernel_o_opt_vk.kd": 961.0600000000004
+    }
+   },
+   "16x1024": {
+    "gpu_us": 2148.2219999999998,
+    "median_us": 2167.931079864502,
+    "min_us": 2161.4909172058105,
+    "p90_us": 2170.6910133361816,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 48.9859999999994,
+     "gdn_prepare_kernel.kd": 399.86900000000014,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 743.971,
+     "chunk_fwd_kernel_o_opt_vk.kd": 955.3960000000003
+    }
+   },
+   "mix5": {
+    "gpu_us": 2213.634100000001,
+    "median_us": 2228.9719581604004,
+    "min_us": 2226.4509201049805,
+    "p90_us": 2236.9320392608643,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 49.038200000000295,
+     "gdn_prepare_kernel.kd": 428.32900000000035,
+     "chunk_gdn_fwd_h_flydsl_opt.kd": 768.523,
+     "chunk_fwd_kernel_o_opt_vk.kd": 967.7439000000003
+    }
+   }
+  }
+ ]
+}

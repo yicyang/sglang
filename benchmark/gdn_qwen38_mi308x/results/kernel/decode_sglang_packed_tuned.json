@@ -1,0 +1,77 @@
+{
+ "meta": {
+  "aiter": "/root/workspace/gdn_optimization/aiter_fork/aiter/__init__.py"
+ },
+ "results": [
+  {
+   "impl": "sglang_packed_decode(triton)(tuned)",
+   "err_o": 0.004166409373283386,
+   "err_state": 0.0015423923032358289,
+   "clobbers_other_slots": false,
+   "correct": true,
+   "bs1": {
+    "graph_us": 7.236099988222122,
+    "gpu_us": 6.767000000000014,
+    "kernels": {
+     "fused_recurrent_gated_delta_rule_packed_decode_kernel.kd": 6.767000000000014
+    }
+   },
+   "bs2": {
+    "graph_us": 10.784099996089935,
+    "gpu_us": 9.443000000000008,
+    "kernels": {
+     "fused_recurrent_gated_delta_rule_packed_decode_kernel.kd": 9.443000000000008
+    }
+   },
+   "bs4": {
+    "graph_us": 16.732099652290344,
+    "gpu_us": 15.659049999999981,
+    "kernels": {
+     "fused_recurrent_gated_delta_rule_packed_decode_kernel.kd": 15.659049999999981
+    }
+   },
+   "bs8": {
+    "graph_us": 20.120100677013397,
+    "gpu_us": 19.80905,
+    "kernels": {
+     "fused_recurrent_gated_delta_rule_packed_decode_kernel.kd": 19.80905
+    }
+   },
+   "bs16": {
+    "graph_us": 33.24019908905029,
+    "gpu_us": 33.511099999999985,
+    "kernels": {
+     "fused_recurrent_gated_delta_rule_packed_decode_kernel.kd": 33.511099999999985
+    }
+   },
+   "bs24": {
+    "graph_us": 42.61220097541809,
+    "gpu_us": 41.205200000000026,
+    "kernels": {
+     "fused_recurrent_gated_delta_rule_packed_decode_kernel.kd": 41.205200000000026
+    }
+   },
+   "bs32": {
+    "graph_us": 56.61630034446716,
+    "gpu_us": 56.1053,
+    "kernels": {
+     "fused_recurrent_gated_delta_rule_packed_decode_kernel.kd": 56.1053
+    }
+   },
+   "bs48": {
+    "graph_us": 75.17639994621277,
+    "gpu_us": 75.6334,
+    "kernels": {
+     "fused_recurrent_gated_delta_rule_packed_decode_kernel.kd": 75.6334
+    }
+   },
+   "bs64": {
+    "graph_us": 93.93649697303772,
+    "gpu_us": 93.50949999999999,
+    "kernels": {
+     "fused_recurrent_gated_delta_rule_packed_decode_kernel.kd": 93.50949999999999
+    }
+   }
+  }
+ ]
+}

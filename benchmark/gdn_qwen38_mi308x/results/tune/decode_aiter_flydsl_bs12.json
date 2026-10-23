@@ -1,0 +1,53 @@
+{
+ "12": {
+  "default_us": 27.272099256515503,
+  "best_us": 26.092100143432617,
+  "best": {
+   "NUM_BLOCKS_PER_V_DIM": 1,
+   "NUM_WARPS": 4,
+   "WARP_THREADS_K": 16
+  },
+  "top5": [
+   [
+    26.092100143432617,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 4,
+     "WARP_THREADS_K": 16
+    }
+   ],
+   [
+    26.192200183868408,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 4
+    }
+   ],
+   [
+    26.472100615501404,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 4,
+     "WARP_THREADS_K": 8
+    }
+   ],
+   [
+    28.18009853363037,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 1,
+     "NUM_WARPS": 2,
+     "WARP_THREADS_K": 8
+    }
+   ],
+   [
+    29.16409969329834,
+    {
+     "NUM_BLOCKS_PER_V_DIM": 2,
+     "NUM_WARPS": 1,
+     "WARP_THREADS_K": 4
+    }
+   ]
+  ]
+ }
+}

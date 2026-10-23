@@ -1,0 +1,212 @@
+"""AITER-based GDN kernels for ROCm.
+
+Prefill wraps ``aiter.ops.triton.gated_delta_net.chunk_gated_delta_rule_opt_vk``,
+which consumes sglang's native layouts directly: token-major q/k/v
+``[1, T, H, D]``, fp32 g/beta ``[1, T, HV]`` and the ``[slots, HV, V, K]`` state
+pool. The prepare stage (cumsum + KKT + solve_tril + w/u) runs as one FlyDSL
+kernel and the hidden-state recurrence (K5) runs as HIP or FlyDSL.
+
+Packed decode uses ``aiter.ops.flydsl.flydsl_gdr_decode`` on strided views of
+the packed ``mixed_qkv`` and the same state pool (no copies). Unpacked decode
+and target verify stay on the inherited Triton kernels.
+"""
+
+import torch
+
+from sglang.srt.environ import envs
+from sglang.srt.layers.attention.linear.kernels.gdn_triton import TritonGDNKernel
+
+
+class AiterGDNKernel(TritonGDNKernel):
+    """Prefill via aiter opt_vk, packed decode via aiter FlyDSL."""
+
+    def __init__(self):
+        from aiter.ops.flydsl.linear_attention_kernels import flydsl_gdr_decode
+        from aiter.ops.prefill_batch_metadata import (
+            build_gated_delta_rule_prefill_metadata,
+        )
+        from aiter.ops.triton.gated_delta_net.gated_delta_rule import (
+            chunk_gated_delta_rule_opt_vk,
+        )
+
+        k5_backend = envs.SGLANG_GDN_AITER_K5.get()
+        if k5_backend not in ("flydsl", "hip"):
+            raise ValueError(
+                f"SGLANG_GDN_AITER_K5 must be 'flydsl' or 'hip', got {k5_backend!r}"
+            )
+        self._opt_vk = chunk_gated_delta_rule_opt_vk
+        self._gdr_decode = flydsl_gdr_decode
+        self._build_metadata = build_gated_delta_rule_prefill_metadata
+        # FlyDSL mfma16 K5 cannot index the state pool, so the touched slots are
+        # gathered / scattered around the call; HIP K5 updates the pool in place.
+        self._gather_state = k5_backend == "flydsl"
+        # The schedule is shared by every GDN layer of a forward pass; aiter binds
+        # it to the exact query_start_loc tensor object it was built from.
+        self._meta_key = None
+        self._meta = None
+
+    def _prefill_metadata(self, query_start_loc, seq_lens_cpu):
+        if seq_lens_cpu is None:
+            seq_lens_cpu = query_start_loc.diff().tolist()
+        seq_lens = tuple(seq_lens_cpu)
+        key = self._meta_key
+        if key is None or key[0] is not query_start_loc or key[1] != seq_lens:
+            self._meta = self._build_metadata(
+                list(seq_lens), cu_seqlens=query_start_loc
+            )
+            self._meta_key = (query_start_loc, seq_lens)
+        return self._meta
+
+    def extend(
+        self,
+        q: torch.Tensor,
+        k: torch.Tensor,
+        v: torch.Tensor,
+        g: torch.Tensor,
+        beta: torch.Tensor,
+        *,
+        ssm_states: torch.Tensor,
+        cache_indices: torch.Tensor,
+        query_start_loc: torch.Tensor,
+        seq_lens_cpu=None,
+        **kwargs,
+    ) -> tuple:
+        if kwargs.get("num_state_checkpoints"):
+            raise NotImplementedError(
+                "aiter GDN prefill does not support state checkpoints"
+            )
+        import os  # DIAG-ONLY (not to be committed)
+
+        dump = os.environ.get("GDN_DIAG_DUMP")
+        if dump and q.shape[1] > 1000 and not os.path.exists(dump):
+            torch.save(
+                dict(
+                    q=q, k=k, v=v, g=g, beta=beta,
+                    state_before=ssm_states[cache_indices.long()].clone(),
+                    cache_indices=cache_indices, query_start_loc=query_start_loc,
+                    seq_lens_cpu=seq_lens_cpu,
+                    strides={n: (t.shape, t.stride(), t.dtype, t.is_contiguous()) for n, t in
+                             dict(q=q, k=k, v=v, g=g, beta=beta, ssm=ssm_states,
+                                  idx=cache_indices, cu=query_start_loc).items()},
+                ),
+                dump,
+            )
+        if os.environ.get("GDN_DIAG_COMPARE") == "1":
+            before = ssm_states[cache_indices.long()].clone()
+            inputs = dict(q=q.clone(), k=k.clone(), v=v.clone(), g=g.clone(), beta=beta.clone())
+            ref_states = ssm_states.clone()
+            ref_o = super().extend(
+                q, k, v, g, beta, ssm_states=ref_states, cache_indices=cache_indices,
+                query_start_loc=query_start_loc, **kwargs,
+            )[0]
+            os.environ["GDN_DIAG_COMPARE"] = "0"
+            got_o = self.extend(
+                q, k, v, g, beta, ssm_states=ssm_states, cache_indices=cache_indices,
+                query_start_loc=query_start_loc, seq_lens_cpu=seq_lens_cpu, **kwargs,
+            )[0]
+            os.environ["GDN_DIAG_COMPARE"] = "1"
+            idx = cache_indices.long()
+            eo = ((got_o.float() - ref_o.float()).abs().max() / ref_o.float().abs().max().clamp_min(1e-6)).item()
+            es = ((ssm_states[idx] - ref_states[idx]).abs().max() / ref_states[idx].abs().max().clamp_min(1e-6)).item()
+            bad = f"/tmp/gdn_bad_{os.getpid()}.pt"
+            if eo > 0.1 and not os.path.exists(bad):
+                torch.save(dict(inputs=inputs, before=before, cache_indices=cache_indices,
+                                query_start_loc=query_start_loc, seq_lens_cpu=seq_lens_cpu,
+                                ref_o=ref_o, got_o=got_o, after_got=ssm_states[idx].clone(),
+                                after_ref=ref_states[idx].clone(),
+                                inputs_still_equal=all(torch.equal(inputs[n], t) for n, t in
+                                                       dict(q=q, k=k, v=v, g=g, beta=beta).items())), bad)
+            print(f"GDN_DIAG T={q.shape[1]} N={idx.numel()} err_o={eo:.3e} err_state={es:.3e} "
+                  f"o_shape={tuple(got_o.shape)} o_stride={got_o.stride()} ref_stride={ref_o.stride()}", flush=True)
+            return got_o, None, None
+        if os.environ.get("GDN_DIAG_TRITON_EXTEND") == "1":
+            return super().extend(
+                q, k, v, g, beta, ssm_states=ssm_states, cache_indices=cache_indices,
+                query_start_loc=query_start_loc, **kwargs,
+            )
+        metadata = self._prefill_metadata(query_start_loc, seq_lens_cpu)
+        common = dict(
+            q=q,
+            k=k,
+            v=v,
+            g=g,
+            beta=beta,
+            output_final_state=True,
+            use_qk_l2norm_in_kernel=True,
+            cu_seqlens=query_start_loc,
+            use_prepare_flydsl=True,
+            state_dtype=ssm_states.dtype,
+            prefill_metadata=metadata,
+        )
+        if self._gather_state:
+            idx = cache_indices.long()
+            o, final_state = self._opt_vk(
+                initial_state=ssm_states.index_select(0, idx),
+                use_chunk_flydsl=True,
+                **common,
+            )
+            ssm_states.index_copy_(0, idx, final_state.to(ssm_states.dtype))
+        else:
+            o, _ = self._opt_vk(
+                initial_state=ssm_states,
+                initial_state_indices=cache_indices,
+                inplace_final_state=True,
+                use_chunk_hip=True,
+                **common,
+            )
+        return o, None, None
+
+    def packed_decode(
+        self,
+        mixed_qkv: torch.Tensor,
+        a: torch.Tensor,
+        b: torch.Tensor,
+        *,
+        A_log: torch.Tensor,
+        dt_bias: torch.Tensor,
+        scale: float,
+        ssm_states: torch.Tensor,
+        cache_indices: torch.Tensor,
+        num_v_heads: int,
+        head_v_dim: int,
+        **kwargs,
+    ) -> torch.Tensor:
+        if kwargs.get("replayssm_d") is not None:
+            return super().packed_decode(
+                mixed_qkv,
+                a,
+                b,
+                A_log=A_log,
+                dt_bias=dt_bias,
+                scale=scale,
+                ssm_states=ssm_states,
+                cache_indices=cache_indices,
+                num_v_heads=num_v_heads,
+                head_v_dim=head_v_dim,
+                **kwargs,
+            )
+        batch = mixed_qkv.shape[0]
+        head_k_dim = ssm_states.shape[-1]
+        qk_dim = (mixed_qkv.shape[1] - num_v_heads * head_v_dim) // 2
+        num_k_heads = qk_dim // head_k_dim
+        assert scale == head_k_dim**-0.5, "flydsl_gdr_decode fixes scale to K^-0.5"
+        q, k, v = torch.split(
+            mixed_qkv, [qk_dim, qk_dim, num_v_heads * head_v_dim], dim=-1
+        )
+        out = mixed_qkv.new_empty(batch, 1, num_v_heads, head_v_dim)
+        # need_shuffle_state=False: the kernel reads the [slots, HV, V, K] pool as is.
+        self._gdr_decode(
+            query=q.view(batch, 1, num_k_heads, head_k_dim),
+            key=k.view(batch, 1, num_k_heads, head_k_dim),
+            value=v.view(batch, 1, num_v_heads, head_v_dim),
+            a=a.view(batch, 1, num_v_heads),
+            b=b.view(batch, 1, num_v_heads),
+            dt_bias=dt_bias,
+            A_log=A_log,
+            indices=cache_indices.to(torch.int32),
+            state=ssm_states,
+            out=out,
+            use_qk_l2norm=True,
+            need_shuffle_state=False,
+        )
+        return out.transpose(0, 1)

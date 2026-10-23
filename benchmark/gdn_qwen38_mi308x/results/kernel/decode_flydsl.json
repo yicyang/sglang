@@ -1,0 +1,63 @@
+{
+ "meta": {
+  "aiter": "/root/workspace/gdn_optimization/aiter_fork/aiter/__init__.py"
+ },
+ "results": [
+  {
+   "impl": "aiter_flydsl_gdr_decode",
+   "err_o": 0.0027328929863870144,
+   "err_state": 1.6779117117948772e-07,
+   "clobbers_other_slots": false,
+   "correct": true,
+   "bs1": {
+    "graph_us": 8.504100143909454,
+    "gpu_us": 7.921000000000015,
+    "kernels": {
+     "gdr_decode_bf16_kh8x128_vh24x128_q1_4w8x8_vs1_0.kd": 7.921000000000015
+    }
+   },
+   "bs2": {
+    "graph_us": 11.524099856615067,
+    "gpu_us": 11.149150000000018,
+    "kernels": {
+     "gdr_decode_bf16_kh8x128_vh24x128_q1_4w8x8_vs1_0.kd": 11.149150000000018
+    }
+   },
+   "bs4": {
+    "graph_us": 15.639999508857727,
+    "gpu_us": 15.219049999999983,
+    "kernels": {
+     "gdr_decode_bf16_kh8x128_vh24x128_q1_4w8x8_vs1_0.kd": 15.219049999999983
+    }
+   },
+   "bs8": {
+    "graph_us": 19.043999910354614,
+    "gpu_us": 19.269050000000007,
+    "kernels": {
+     "gdr_decode_bf16_kh8x128_vh24x128_q1_4w8x8_vs1_0.kd": 19.269050000000007
+    }
+   },
+   "bs16": {
+    "graph_us": 34.26809906959534,
+    "gpu_us": 33.817100000000025,
+    "kernels": {
+     "gdr_decode_bf16_kh8x128_vh24x128_q1_4w8x8_vs1_0.kd": 33.817100000000025
+    }
+   },
+   "bs32": {
+    "graph_us": 60.79229712486267,
+    "gpu_us": 61.023350000000015,
+    "kernels": {
+     "gdr_decode_bf16_kh8x128_vh24x128_q1_4w8x8_vs1_0.kd": 61.023350000000015
+    }
+   },
+   "bs64": {
+    "graph_us": 115.8445954322815,
+    "gpu_us": 115.11755000000004,
+    "kernels": {
+     "gdr_decode_bf16_kh8x128_vh24x128_q1_4w8x8_vs1_0.kd": 115.11755000000004
+    }
+   }
+  }
+ ]
+}

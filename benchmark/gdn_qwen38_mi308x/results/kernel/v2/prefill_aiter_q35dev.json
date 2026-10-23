@@ -1,0 +1,451 @@
+{
+ "meta": {
+  "aiter_file": "/root/workspace/gdn_optimization/aiter_q35dev/aiter/__init__.py",
+  "torch": "2.12.0+rocm7.14.0.git6bbd260",
+  "gpu": "AMD Instinct MI308X",
+  "env": {
+   "AITER_USE_SYSTEM_TRITON": "1",
+   "AITER_GPU_ARCHS": "gfx942",
+   "AITER_ASM_DIR": "/root/workspace/gdn_optimization/aiter_q35dev/hsa/"
+  }
+ },
+ "results": [
+  {
+   "impl": "aiter_q35dev:opt_vk_triton",
+   "err_o": 0.008850528858602047,
+   "err_state": 0.00636768713593483,
+   "clobbers_other_slots": false,
+   "err_o_realgate": 0.0061051202937960625,
+   "err_state_realgate": 0.006308873649686575,
+   "err_o_bad_case0.pt": 0.004081632476300001,
+   "err_o_bad_case1.pt": 0.005494505632668734,
+   "err_o_layer0_T2000.pt": 0.008368200622498989,
+   "correct": true,
+   "1x1024": {
+    "gpu_us": 289.9953999999999,
+    "median_us": 420.72299122810364,
+    "min_us": 411.3219976425171,
+    "p90_us": 442.1220123767853,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 13.433999999999935,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 15.431099999999878,
+     "fused_solve_tril_recompute_w_u_kernel.kd": 46.45120000000004,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 161.27560000000008,
+     "chunk_fwd_kernel_o_opt_vk.kd": 53.403499999999966
+    }
+   },
+   "1x2048": {
+    "gpu_us": 551.4408000000001,
+    "median_us": 646.9230055809021,
+    "min_us": 630.0830245018005,
+    "p90_us": 668.2029962539673,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 12.066200000000094,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 25.519100000000012,
+     "fused_solve_tril_recompute_w_u_kernel.kd": 91.53940000000011,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 312.1006999999999,
+     "chunk_fwd_kernel_o_opt_vk.kd": 110.21539999999989
+    }
+   },
+   "1x4096": {
+    "gpu_us": 1071.0095000000003,
+    "median_us": 1164.1260385513306,
+    "min_us": 1145.885944366455,
+    "p90_us": 1182.5259923934937,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 17.946099999999962,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 45.38720000000004,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 6.7349999999999905,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 78.6953999999999,
+     "recompute_w_u_head_major_kernel.kd": 87.34349999999996,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 614.6102000000002,
+     "chunk_fwd_kernel_o_opt_vk.kd": 220.2921000000003
+    }
+   },
+   "1x8192": {
+    "gpu_us": 2178.0073999999995,
+    "median_us": 2234.2920303344727,
+    "min_us": 2215.451955795288,
+    "p90_us": 2278.6920070648193,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 28.62209999999952,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 88.54360000000004,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 10.283099999999967,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 151.31969999999998,
+     "recompute_w_u_head_major_kernel.kd": 182.4720000000003,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 1240.1772999999996,
+     "chunk_fwd_kernel_o_opt_vk.kd": 476.5896000000001
+    }
+   },
+   "1x12000": {
+    "gpu_us": 3291.093099999999,
+    "median_us": 3346.8968868255615,
+    "min_us": 3334.5770835876465,
+    "p90_us": 3372.2169399261475,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 37.49410000000001,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 126.3797000000001,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 13.527099999999404,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 211.3081000000003,
+     "recompute_w_u_head_major_kernel.kd": 270.5804000000001,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 1914.8368999999996,
+     "chunk_fwd_kernel_o_opt_vk.kd": 716.9667999999999
+    }
+   },
+   "1x16384": {
+    "gpu_us": 4541.043399999997,
+    "median_us": 4587.944030761719,
+    "min_us": 4571.703910827637,
+    "p90_us": 4601.142883300781,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 48.53819999999886,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 171.93990000000045,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 17.167099999999824,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 286.6003999999994,
+     "recompute_w_u_head_major_kernel.kd": 380.5769999999996,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 2654.5407,
+     "chunk_fwd_kernel_o_opt_vk.kd": 981.6800999999988
+    }
+   },
+   "4x4096": {
+    "gpu_us": 4069.2491999999997,
+    "median_us": 4110.421180725098,
+    "min_us": 4100.461006164551,
+    "p90_us": 4136.7011070251465,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 48.41819999999924,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 172.3037999999997,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 17.2031999999994,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 285.9445000000002,
+     "recompute_w_u_head_major_kernel.kd": 379.2170000000003,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 2190.1503000000002,
+     "chunk_fwd_kernel_o_opt_vk.kd": 976.0122000000005
+    }
+   },
+   "16x1024": {
+    "gpu_us": 4048.2969999999987,
+    "median_us": 4086.7409706115723,
+    "min_us": 4075.42085647583,
+    "p90_us": 4101.061820983887,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 48.37049999999915,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 172.29570000000007,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 17.25930000000009,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 286.9960000000013,
+     "recompute_w_u_head_major_kernel.kd": 380.0129999999994,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 2168.5582999999997,
+     "chunk_fwd_kernel_o_opt_vk.kd": 974.8041999999988
+    }
+   },
+   "mix5": {
+    "gpu_us": 4137.005599999999,
+    "median_us": 4169.021129608154,
+    "min_us": 4154.022216796875,
+    "p90_us": 4187.861919403076,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 48.13059999999925,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 173.33560000000017,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 17.579400000000305,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 288.7364999999992,
+     "recompute_w_u_head_major_kernel.kd": 381.86899999999935,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 2242.3904999999995,
+     "chunk_fwd_kernel_o_opt_vk.kd": 984.9640000000012
+    }
+   }
+  },
+  {
+   "impl": "aiter_q35dev:opt_vk_hipK5",
+   "err_o": 0.009022725746035576,
+   "err_state": 0.006540308240801096,
+   "clobbers_other_slots": false,
+   "err_o_realgate": 0.006146855652332306,
+   "err_state_realgate": 0.007256411015987396,
+   "err_o_bad_case0.pt": 0.004081632476300001,
+   "err_o_bad_case1.pt": 0.005494505632668734,
+   "err_o_layer0_T2000.pt": 0.008368200622498989,
+   "correct": true,
+   "1x1024": {
+    "gpu_us": 181.89880000000002,
+    "median_us": 395.20201086997986,
+    "min_us": 381.0020089149475,
+    "p90_us": 419.60200667381287,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 12.946000000000007,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 15.467100000000123,
+     "fused_solve_tril_recompute_w_u_kernel.kd": 46.59509999999994,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, hip_bfloat16*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 53.01939999999992,
+     "chunk_fwd_kernel_o_opt_vk.kd": 53.87120000000001
+    }
+   },
+   "1x2048": {
+    "gpu_us": 339.6958,
+    "median_us": 473.3220040798187,
+    "min_us": 456.04199171066284,
+    "p90_us": 493.44199895858765,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 12.15009999999999,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 25.735199999999942,
+     "fused_solve_tril_recompute_w_u_kernel.kd": 92.0114,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, hip_bfloat16*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 98.83180000000004,
+     "chunk_fwd_kernel_o_opt_vk.kd": 110.96730000000005
+    }
+   },
+   "1x4096": {
+    "gpu_us": 651.7354,
+    "median_us": 774.5640277862549,
+    "min_us": 751.2040138244629,
+    "p90_us": 799.3639707565308,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 17.79020000000007,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 46.51909999999985,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 6.199200000000036,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 80.30739999999996,
+     "recompute_w_u_head_major_kernel.kd": 89.32350000000002,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, hip_bfloat16*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 190.42000000000004,
+     "chunk_fwd_kernel_o_opt_vk.kd": 221.17600000000002
+    }
+   },
+   "1x8192": {
+    "gpu_us": 1334.8909999999996,
+    "median_us": 1397.5670337677002,
+    "min_us": 1384.8079442977905,
+    "p90_us": 1412.606954574585,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 28.54200000000013,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 88.85169999999977,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 10.235199999999873,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 151.5636,
+     "recompute_w_u_head_major_kernel.kd": 181.18390000000002,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, hip_bfloat16*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 403.0291999999999,
+     "chunk_fwd_kernel_o_opt_vk.kd": 471.4853999999999
+    }
+   },
+   "1x12000": {
+    "gpu_us": 1966.2181999999996,
+    "median_us": 2042.4110889434814,
+    "min_us": 2023.5710144042969,
+    "p90_us": 2057.810068130493,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 37.43019999999987,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 127.04369999999987,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 13.583100000000137,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 211.10399999999998,
+     "recompute_w_u_head_major_kernel.kd": 272.35239999999965,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, hip_bfloat16*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 602.0221,
+     "chunk_fwd_kernel_o_opt_vk.kd": 702.6827000000001
+    }
+   },
+   "1x16384": {
+    "gpu_us": 2693.6781000000015,
+    "median_us": 2755.5339336395264,
+    "min_us": 2740.6139373779297,
+    "p90_us": 2768.7740325927734,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 48.5224000000005,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 171.99169999999967,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 17.207200000000196,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 287.5008000000005,
+     "recompute_w_u_head_major_kernel.kd": 378.35300000000007,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, hip_bfloat16*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 823.9910000000007,
+     "chunk_fwd_kernel_o_opt_vk.kd": 966.1119999999999
+    }
+   },
+   "4x4096": {
+    "gpu_us": 2511.6330999999996,
+    "median_us": 2572.572946548462,
+    "min_us": 2560.6930255889893,
+    "p90_us": 2588.4931087493896,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 48.542499999999485,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 172.53980000000013,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 17.331199999999875,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 286.76460000000014,
+     "recompute_w_u_head_major_kernel.kd": 378.8089999999994,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, hip_bfloat16*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 635.1780000000003,
+     "chunk_fwd_kernel_o_opt_vk.kd": 972.4680000000003
+    }
+   },
+   "16x1024": {
+    "gpu_us": 2447.5488,
+    "median_us": 2504.652976989746,
+    "min_us": 2492.093086242676,
+    "p90_us": 2516.3331031799316,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 48.550300000000256,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 172.2878999999992,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 17.19910000000042,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 286.8125000000001,
+     "recompute_w_u_head_major_kernel.kd": 379.4409999999998,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, hip_bfloat16*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 570.2500000000006,
+     "chunk_fwd_kernel_o_opt_vk.kd": 973.0079999999997
+    }
+   },
+   "mix5": {
+    "gpu_us": 2573.953500000001,
+    "median_us": 2629.1329860687256,
+    "min_us": 2616.6539192199707,
+    "p90_us": 2646.1338996887207,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 48.13030000000009,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 173.25989999999996,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 17.467100000000322,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 288.9365999999998,
+     "recompute_w_u_head_major_kernel.kd": 380.8250000000003,
+     "void (anonymous namespace)::chunk_gated_delta_rule_fwd_h_hip_kernel<64, true, true, true, true, true, false, true, false>(hip_bfloat16 const*, hip_bfloat16 const*, hip_bfloat16 const*, float const*, float const*, void const*, int const*, hip_bfloat16*, hip_bfloat16*, void*, int const*, int const*, int, int, int, int, int, long, long, long) [clone .kd]": 681.6984,
+     "chunk_fwd_kernel_o_opt_vk.kd": 983.6362000000004
+    }
+   }
+  },
+  {
+   "impl": "aiter_q35dev:opt_vk_flydslK5",
+   "err_o": 0.008850528858602047,
+   "err_state": 0.00636768713593483,
+   "clobbers_other_slots": false,
+   "err_o_realgate": 0.0061051202937960625,
+   "err_state_realgate": 0.006308873649686575,
+   "err_o_bad_case0.pt": 0.004081632476300001,
+   "err_o_bad_case1.pt": 0.005494505632668734,
+   "err_o_layer0_T2000.pt": 0.008368200622498989,
+   "correct": true,
+   "1x1024": {
+    "gpu_us": 289.1795000000001,
+    "median_us": 414.4020080566406,
+    "min_us": 398.72199296951294,
+    "p90_us": 430.24200201034546,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 12.26609999999987,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 15.43899999999998,
+     "fused_solve_tril_recompute_w_u_kernel.kd": 46.51930000000013,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 161.61590000000007,
+     "chunk_fwd_kernel_o_opt_vk.kd": 53.33920000000003
+    }
+   },
+   "1x2048": {
+    "gpu_us": 550.7368,
+    "median_us": 628.5640001296997,
+    "min_us": 620.7640171051025,
+    "p90_us": 642.4430012702942,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 11.966099999999942,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 25.163100000000092,
+     "fused_solve_tril_recompute_w_u_kernel.kd": 91.23129999999993,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 312.25669999999997,
+     "chunk_fwd_kernel_o_opt_vk.kd": 110.11960000000006
+    }
+   },
+   "1x4096": {
+    "gpu_us": 1073.6055999999996,
+    "median_us": 1145.8059549331665,
+    "min_us": 1134.045958518982,
+    "p90_us": 1160.6459617614746,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 18.062099999999933,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 45.47130000000005,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 6.755000000000003,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 79.68740000000011,
+     "recompute_w_u_head_major_kernel.kd": 88.05549999999975,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 614.9422,
+     "chunk_fwd_kernel_o_opt_vk.kd": 220.6320999999999
+    }
+   },
+   "1x8192": {
+    "gpu_us": 2173.8994,
+    "median_us": 2217.931032180786,
+    "min_us": 2207.092046737671,
+    "p90_us": 2230.531930923462,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 28.706199999999953,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 88.21949999999994,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 10.231100000000104,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 151.53969999999995,
+     "recompute_w_u_head_major_kernel.kd": 182.11999999999978,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 1236.5654000000002,
+     "chunk_fwd_kernel_o_opt_vk.kd": 476.5174999999998
+    }
+   },
+   "1x12000": {
+    "gpu_us": 3291.5529999999994,
+    "median_us": 3346.376895904541,
+    "min_us": 3326.896905899048,
+    "p90_us": 3358.297109603882,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 37.558299999999285,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 127.06760000000045,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 13.407000000000277,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 211.4279999999999,
+     "recompute_w_u_head_major_kernel.kd": 272.2524999999998,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 1913.6928999999996,
+     "chunk_fwd_kernel_o_opt_vk.kd": 716.1467000000001
+    }
+   },
+   "1x16384": {
+    "gpu_us": 4554.579599999997,
+    "median_us": 4605.38387298584,
+    "min_us": 4585.663795471191,
+    "p90_us": 4617.464065551758,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 48.35799999999966,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 172.83599999999936,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 17.263000000000034,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 286.7966999999999,
+     "recompute_w_u_head_major_kernel.kd": 380.4129999999992,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 2668.364699999999,
+     "chunk_fwd_kernel_o_opt_vk.kd": 980.5482000000001
+    }
+   },
+   "4x4096": {
+    "gpu_us": 4080.1532000000016,
+    "median_us": 4119.101047515869,
+    "min_us": 4105.861186981201,
+    "p90_us": 4137.822151184082,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 48.21820000000106,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 171.63190000000014,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 17.19909999999994,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 286.3725000000003,
+     "recompute_w_u_head_major_kernel.kd": 380.3770000000001,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 2200.0184,
+     "chunk_fwd_kernel_o_opt_vk.kd": 976.3360999999999
+    }
+   },
+   "16x1024": {
+    "gpu_us": 4049.6490999999983,
+    "median_us": 4079.9808502197266,
+    "min_us": 4067.221164703369,
+    "p90_us": 4098.7420082092285,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 48.25829999999933,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 171.90380000000002,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 17.143099999999517,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 286.32089999999965,
+     "recompute_w_u_head_major_kernel.kd": 378.91299999999984,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 2173.5939999999996,
+     "chunk_fwd_kernel_o_opt_vk.kd": 973.5160000000001
+    }
+   },
+   "mix5": {
+    "gpu_us": 4140.301500000001,
+    "median_us": 4169.102191925049,
+    "min_us": 4146.862030029297,
+    "p90_us": 4182.4212074279785,
+    "kernels": {
+     "l2norm_fwd_kernel.kd": 48.30630000000124,
+     "fused_chunk_local_cumsum_scaled_dot_kkt_fwd_kernel.kd": 173.1039999999996,
+     "void at::native::vectorized_elementwise_kernel<8, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>) [clone .kd]": 17.42299999999973,
+     "merge_16x16_to_64x64_inverse_kernel.kd": 288.5204999999998,
+     "recompute_w_u_head_major_kernel.kd": 381.3170000000007,
+     "chunk_gated_delta_rule_fwd_kernel_h_opt_vk.kd": 2248.4026000000003,
+     "chunk_fwd_kernel_o_opt_vk.kd": 983.2281000000006
+    }
+   }
+  },
+  {
+   "impl": "aiter_q35dev:opt_vk_flydslPrep+hipK5",
+   "error": "RuntimeError: use_prepare_flydsl unsupported by this aiter"
+  },
+  {
+   "impl": "aiter_q35dev:opt_vk_flydslPrep+flydslK5",
+   "error": "RuntimeError: use_prepare_flydsl unsupported by this aiter"
+  }
+ ]
+}
