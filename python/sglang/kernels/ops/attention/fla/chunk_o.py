@@ -10,10 +10,20 @@ import triton.language as tl
 
 from sglang.kernels.ops.attention.fla.index import prepare_chunk_indices
 from sglang.kernels.ops.attention.fla.op import exp, safe_exp
-from sglang.kernels.ops.attention.fla.utils import check_shared_mem, is_nvidia_hopper
+from sglang.kernels.ops.attention.fla.utils import (
+    check_shared_mem,
+    is_amd_gfx942,
+    is_nvidia_hopper,
+)
 
 BKV_LIST = [64, 128] if check_shared_mem() else [32, 64]
 NUM_WARPS = [2, 4] if is_nvidia_hopper else [2, 4, 8]
+# Swept on MI308X (gfx942) for Qwen3.8 GDN prefill shapes; 2.5x over the default.
+CHUNK_FWD_O_LAUNCH = (
+    dict(BK=64, BV=128, num_warps=4, num_stages=1, matrix_instr_nonkdim=16, kpack=2)
+    if is_amd_gfx942
+    else dict(BK=128, BV=64, num_warps=4, num_stages=2)
+)
 
 
 # @triton.autotune(
@@ -164,11 +174,8 @@ def chunk_fwd_o(
         K=K,
         V=V,
         BT=BT,
-        BK=128,
-        BV=64,
         USE_G=g is not None,
         IS_VARLEN=cu_seqlens is not None,
-        num_warps=4,
-        num_stages=2,
+        **CHUNK_FWD_O_LAUNCH,
     )
     return o

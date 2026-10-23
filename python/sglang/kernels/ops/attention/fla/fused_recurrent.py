@@ -9,7 +9,15 @@ import triton
 import triton.language as tl
 
 from sglang.kernels.ops.attention.fla.op import exp
-from sglang.kernels.ops.attention.fla.utils import input_guard
+from sglang.kernels.ops.attention.fla.utils import input_guard, is_amd_gfx942
+
+# (max batch size, launch config), swept on MI308X (gfx942) for HV=24, K=V=128 decode
+# with cache-cold state pools; larger batches keep the default (no measurable gain).
+PACKED_DECODE_GFX942_CONFIGS: list = [
+    (2, dict(BV=16, num_warps=2, num_stages=3)),
+    (4, dict(BV=64, num_warps=4, num_stages=1)),
+    (8, dict(BV=128, num_warps=4, num_stages=3)),
+]
 
 
 @triton.jit(do_not_specialize=["T"])
@@ -265,6 +273,14 @@ def fused_recurrent_gated_delta_rule_packed_decode_kernel(
     tl.store(p_ht, b_h.to(p_ht.dtype.element_ty), mask=mask_h)
 
 
+def packed_decode_launch_config(B: int, V: int) -> dict:
+    if is_amd_gfx942:
+        for max_b, cfg in PACKED_DECODE_GFX942_CONFIGS:
+            if B <= max_b:
+                return dict(cfg)
+    return dict(BV=min(triton.next_power_of_2(V), 32), num_warps=1, num_stages=3)
+
+
 def fused_recurrent_gated_delta_rule_packed_decode(
     mixed_qkv: torch.Tensor,
     a: torch.Tensor,
@@ -358,9 +374,8 @@ def fused_recurrent_gated_delta_rule_packed_decode(
         raise ValueError(
             f"Packed decode kernel only supports NK=1 (got K={K}, BK={BK})."
         )
-    BV = min(triton.next_power_of_2(V), 32)
-    num_stages = 3
-    num_warps = 1
+    launch = packed_decode_launch_config(B=B, V=V)
+    BV = launch.pop("BV")
 
     stride_mixed_qkv_tok = mixed_qkv.stride(0)
     stride_a_tok = a.stride(0)
@@ -396,8 +411,7 @@ def fused_recurrent_gated_delta_rule_packed_decode(
         BV=BV,
         SOFTPLUS_THRESHOLD=20.0,
         USE_QK_L2NORM_IN_KERNEL=use_qk_l2norm_in_kernel,
-        num_warps=num_warps,
-        num_stages=num_stages,
+        **launch,
     )
     return out, initial_state
 

@@ -166,6 +166,15 @@ class GDNKernelDispatcher:
             raise ValueError(
                 "The Helion linear-attention backend supports KDA only, not GDN."
             )
+        elif decode_backend.is_aiter():
+            if not is_hip():
+                raise ValueError("aiter GDN decode backend requires ROCm")
+            from sglang.srt.layers.attention.linear.kernels.gdn_aiter import (
+                AiterGDNKernel,
+            )
+
+            aiter_kernel = AiterGDNKernel()
+            self.decode_kernel = aiter_kernel
         else:
             raise ValueError(f"Unsupported GDN decode backend: {decode_backend}")
 
@@ -214,6 +223,16 @@ class GDNKernelDispatcher:
         elif prefill_backend.is_helion():
             raise ValueError(
                 "The Helion linear-attention backend supports KDA only, not GDN."
+            )
+        elif prefill_backend.is_aiter():
+            if not is_hip():
+                raise ValueError("aiter GDN prefill backend requires ROCm")
+            from sglang.srt.layers.attention.linear.kernels.gdn_aiter import (
+                AiterGDNKernel,
+            )
+
+            self.extend_kernel = (
+                self.decode_kernel if decode_backend.is_aiter() else AiterGDNKernel()
             )
         else:
             raise ValueError(f"Unsupported GDN prefill backend: {prefill_backend}")
@@ -747,6 +766,7 @@ class GDNAttnBackend(MambaAttnBackendBase):
                 state_checkpoint_every_n_tokens=(
                     forward_metadata.state_checkpoint_every_n_tokens
                 ),
+                seq_lens_cpu=forward_batch.extend_seq_lens_cpu,
             )
 
             if is_npu() and last_recurrent_state is not None:
@@ -762,6 +782,10 @@ class GDNAttnBackend(MambaAttnBackendBase):
                 ssm_states[cache_indices] = ssm_states_contig
 
             if forward_metadata.has_mamba_track_mask:
+                assert h is not None, (
+                    "mamba state tracking needs per-chunk states, which this "
+                    "GDN prefill backend does not return; use the triton backend"
+                )
                 self._track_mamba_state_extend(
                     forward_batch, h, ssm_states, forward_metadata
                 )

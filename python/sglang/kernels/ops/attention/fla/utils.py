@@ -269,6 +269,9 @@ is_amd = device_platform == "amd"
 is_intel = device_platform == "intel"
 is_nvidia = device_platform == "nvidia"
 is_intel_alchemist = is_intel and "Intel(R) Arc(TM) A" in torch.xpu.get_device_name(0)
+is_amd_gfx942 = is_amd and torch.cuda.get_device_properties(0).gcnArchName.startswith(
+    "gfx942"
+)
 is_nvidia_hopper = is_nvidia and (
     "NVIDIA H" in torch.cuda.get_device_name(0)
     or torch.cuda.get_device_capability()[0] >= 9

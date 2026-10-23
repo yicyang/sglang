@@ -9,6 +9,22 @@ import triton
 import triton.language as tl
 
 from sglang.kernels.ops.attention.fla.index import prepare_chunk_indices
+from sglang.kernels.ops.attention.fla.utils import is_amd_gfx942
+
+# Swept on MI308X (gfx942) for Qwen3.8 GDN prefill shapes; 2x over the default.
+RECOMPUTE_W_U_LAUNCH = (
+    dict(
+        BK=64,
+        BV=128,
+        num_warps=2,
+        num_stages=3,
+        waves_per_eu=2,
+        matrix_instr_nonkdim=16,
+        kpack=2,
+    )
+    if is_amd_gfx942
+    else dict(BK=64, BV=64, num_warps=4, num_stages=3)
+)
 
 
 # @triton.autotune(
@@ -124,8 +140,6 @@ def recompute_w_u_fwd(
     if chunk_indices is None and cu_seqlens is not None:
         chunk_indices = prepare_chunk_indices(cu_seqlens, BT)
     NT = triton.cdiv(T, BT) if cu_seqlens is None else len(chunk_indices)
-    BK = 64
-    BV = 64
     u = torch.empty_like(v)
     w = k.new_empty(B, T, H, K)
     recompute_w_u_fwd_kernel[(NT, B * H)](
@@ -144,11 +158,8 @@ def recompute_w_u_fwd(
         K=K,
         V=V,
         BT=BT,
-        BK=BK,
-        BV=BV,
         IS_VARLEN=cu_seqlens is not None,
-        num_warps=4,
-        num_stages=3,
+        **RECOMPUTE_W_U_LAUNCH,
     )
     return w, u
 

@@ -1236,6 +1236,8 @@ class Envs:
     # mamba pool ratio accordingly. Frees one resident slot per running request,
     # raising max_running_requests. Off = original locking + ratio (escape hatch).
     SGLANG_OPT_MAMBA_SKIP_DECODE_LOCK = EnvBool(False)
+    # K5 (hidden-state recurrence) of --linear-attn-prefill-backend aiter: "flydsl" or "hip".
+    SGLANG_GDN_AITER_K5 = EnvStr("hip")
 
     # ===================================================================
     # CUDA graphs and execution buffers

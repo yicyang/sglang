@@ -16,12 +16,16 @@ from sglang.kernels.ops.attention.fla.index import (
 from sglang.kernels.ops.attention.fla.op import exp, exp2, safe_exp
 from sglang.kernels.ops.attention.fla.utils import (
     autotune_cache_kwargs,
+    is_amd_gfx942,
     is_nvidia_hopper,
 )
 
 NUM_WARPS = [2, 4] if is_nvidia_hopper else [2, 4, 8, 16]
 CHUNK_SIZE = 64
-GDN_CHUNK_H_BV = int(os.getenv("SGLANG_GDN_CHUNK_H_BV", "32"))
+# BV=64 measured 1.6x faster than 32 on MI308X for H=24, K=V=128 prefill.
+GDN_CHUNK_H_BV = int(
+    os.getenv("SGLANG_GDN_CHUNK_H_BV", "64" if is_amd_gfx942 else "32")
+)
 GDN_CHUNK_H_NUM_WARPS = int(os.getenv("SGLANG_GDN_CHUNK_H_NUM_WARPS", "4"))
 GDN_CHUNK_H_NUM_STAGES = int(os.getenv("SGLANG_GDN_CHUNK_H_NUM_STAGES", "2"))
 
