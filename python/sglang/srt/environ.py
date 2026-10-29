@@ -299,6 +299,11 @@ class Envs:
     # Bitwise-exact, shape-guarded Qwen4 PLE decode fusion. Unsupported inputs
     # and phases fall back to the original implementation.
     SGLANG_ENABLE_QWEN4_PLE_FUSION = EnvBool(True)
+    # Experimental TP2 ROCm prefill path: pipeline the attention output projection
+    # with its all-reduce over row chunks, pulling the peer's partial sums over SDMA.
+    SGLANG_QWEN4_SDMA_PROJ_PIPELINE = EnvBool(False)
+    SGLANG_QWEN4_SDMA_PROJ_PIPELINE_CHUNKS = EnvInt(4)
+    SGLANG_QWEN4_SDMA_PROJ_PIPELINE_MIN_TOKENS = EnvInt(4096)
     # Select the FP8 (deep_gemm) tokenwise QSA indexer; only the BF16 reference
     # path is ported, so setting this fails loudly instead of degrading.
     SGLANG_QWEN_DSA_USE_FP8_INDEXER = EnvBool(False)

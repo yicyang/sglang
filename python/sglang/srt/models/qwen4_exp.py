@@ -28,6 +28,7 @@ from sglang.srt.layers.dp_attention import (
     dp_gather_replicate,
     dp_scatter,
     get_attention_dp_size,
+    get_attn_tp_group,
     get_dp_global_num_tokens,
     get_global_dp_buffer,
     get_local_dp_buffer,
@@ -44,6 +45,7 @@ from sglang.srt.layers.moe import get_moe_a2a_backend, should_use_dp_reduce_scat
 from sglang.srt.layers.moe.fused_moe_triton.layer import FusedMoE
 from sglang.srt.layers.quantization.base_config import QuantizationConfig
 from sglang.srt.layers.quantization.unquant import UnquantizedEmbeddingMethod
+from sglang.srt.layers.sdma_tp_pipeline import get_sdma_tp2_pipeline
 from sglang.srt.layers.utils import get_layer_id
 from sglang.srt.layers.vocab_parallel_embedding import VocabParallelEmbedding
 from sglang.srt.model_executor.forward_batch_info import ForwardBatch, ForwardMode
@@ -61,7 +63,8 @@ from sglang.srt.models.qwen3_5 import (
 )
 from sglang.srt.models.qwen3_vl import Qwen3VLForConditionalGeneration
 from sglang.srt.runtime_context import get_parallel
-from sglang.srt.utils import logger
+from sglang.srt.server_args import get_global_server_args
+from sglang.srt.utils import is_hip, logger
 
 # Decode/verify-sized batches only: at prefill sizes both chains are compute
 # bound and serializing them on one stream is faster than contending.
@@ -1245,6 +1248,35 @@ class Qwen4ExpPLELayer(nn.Module):
         return _pad_token_rows(output, batch.physical_tokens)
 
 
+def _install_sdma_proj_pipeline(proj: nn.Module) -> None:
+    """Route large prefill calls of a TP2 row-parallel projection through the
+    SDMA chunk pipeline; the result is already all-reduced and tagged so the
+    layer skips its own all-reduce."""
+    plain_forward = proj.forward
+    chunks = envs.SGLANG_QWEN4_SDMA_PROJ_PIPELINE_CHUNKS.get()
+    min_tokens = envs.SGLANG_QWEN4_SDMA_PROJ_PIPELINE_MIN_TOKENS.get()
+
+    def forward(x: torch.Tensor):
+        # Both TP ranks see the same token count, so they always take the same branch.
+        if x.shape[0] < min_tokens or get_is_capture_mode():
+            return plain_forward(x)
+        pipeline = get_sdma_tp2_pipeline(
+            capacity_tokens=get_global_server_args().max_prefill_tokens,
+            hidden_size=proj.output_size,
+            dtype=x.dtype,
+            cpu_group=get_attn_tp_group().cpu_group,
+        )
+        if not pipeline.fits(x.shape[0]):
+            return plain_forward(x)
+        out = pipeline.run(
+            project=lambda rows: plain_forward(rows)[0], x=x, chunks=chunks
+        )
+        out._sglang_tp_reduced = True
+        return out, None
+
+    proj.forward = forward
+
+
 class Qwen4ExpLayerExtensionMixin:
     def _init_qwen4_exp_layer_extensions(
         self,
@@ -1299,6 +1331,16 @@ class Qwen4ExpLayerExtensionMixin:
             use_mix=True,
             use_combine=True,
         )
+        if (
+            envs.SGLANG_QWEN4_SDMA_PROJ_PIPELINE.get()
+            and is_hip()
+            and get_parallel().attn_tp_size == 2
+        ):
+            _install_sdma_proj_pipeline(
+                self.linear_attn.out_proj
+                if isinstance(self, Qwen3_5LinearDecoderLayer)
+                else self.o_proj
+            )
 
     def _prepare_qwen4_exp_attn(
         self,
@@ -1339,7 +1381,8 @@ class Qwen4ExpLayerExtensionMixin:
         residual: Optional[torch.Tensor],
         forward_batch: ForwardBatch,
     ):
-        if not forward_batch.forward_mode.is_idle():
+        already_reduced = hasattr(hidden_states, "_sglang_tp_reduced")
+        if not forward_batch.forward_mode.is_idle() and not already_reduced:
             hidden_states = attn_tp_all_reduce(hidden_states)
         hidden_states = self.attn_hyper_connection.combine(hidden_states, residual)
         hidden_states, residual = self.mlp_hyper_connection.mix(hidden_states)
