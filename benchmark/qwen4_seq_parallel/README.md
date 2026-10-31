@@ -48,3 +48,28 @@ Decode, CUDA graph capture, speculative modes, DP attention and EP all-to-all ke
 
 Greedy outputs of a long-context probe are bit-identical to the baseline; gsm8k and the probe
 (48/48) are unchanged.
+
+## Reduce-scatter over SDMA (ROCm)
+
+`SGLANG_QWEN4_SP_SDMA_RS=1` moves the sequence-parallel reduce-scatters to the SDMA copy engines
+(`layers/sdma_reduce_scatter.py`). Each rank computes the projection (o_proj / GDN out_proj) in row
+chunks, the blocks owned by other ranks first and its own block last, and pushes each finished chunk to
+its owner with an SDMA copy plus a flag; the owner waits on the flags on its compute stream right before
+it sums and combines each chunk. The MoE output is reduce-scattered the same way after the experts.
+With `fp8`, pushed rows are float8 e4m3fnuz with one bf16 scale per 32 values (the local rows stay bf16).
+The all-gather stays on aiter.
+
+| Knob | Default | Effect |
+|---|---|---|
+| `SGLANG_QWEN4_SP_SDMA_RS` | 0 | reduce-scatter over SDMA (needs `SGLANG_QWEN4_SEQ_PARALLEL=1`) |
+| `SGLANG_QWEN4_SP_SDMA_RS_TRANSPORT` | bf16 | `bf16` (exact rows) or `fp8` (lossy, ~half the bytes) |
+| `SGLANG_QWEN4_SP_SDMA_RS_CHUNKS` | 2 | row chunks per owned block; measured best: 2 at TP2, 1 at TP4 |
+
+12k-token prefill step on top of sequence parallelism: TP2 686 -> 658 (bf16) / 648 ms (fp8),
+TP4 442 -> 433 / 422 ms. Serving req/s vs sequence parallelism alone, two rounds each:
+TP2 +0.5~4.1% (bf16) and +0.2~4.9% (fp8), growing with concurrency; TP4 -2.7%~+1.3% (no gain),
+so it is only recommended at TP2.
+
+| Script | What it measures |
+|---|---|
+| `bench_sdma_rs.py` | `SdmaReduceScatter` vs an fp32 reference (bf16 / fp8, uneven T), and GEMM + RS + combine vs aiter |

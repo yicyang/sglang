@@ -304,6 +304,11 @@ class Envs:
     SGLANG_QWEN4_SEQ_PARALLEL = EnvBool(False)
     # Arbitrary; smaller batches (decode, short prefill) keep the all-reduce.
     SGLANG_QWEN4_SEQ_PARALLEL_MIN_TOKENS = EnvInt(2048)
+    # ROCm: run the sequence-parallel reduce-scatters over SDMA, pipelined with the
+    # producing projection in row chunks; "fp8" sends peers' rows as fp8 + bf16 scale per 32.
+    SGLANG_QWEN4_SP_SDMA_RS = EnvBool(False)
+    SGLANG_QWEN4_SP_SDMA_RS_TRANSPORT = EnvStr("bf16")
+    SGLANG_QWEN4_SP_SDMA_RS_CHUNKS = EnvInt(2)
     # Select the FP8 (deep_gemm) tokenwise QSA indexer; only the BF16 reference
     # path is ported, so setting this fails loudly instead of degrading.
     SGLANG_QWEN_DSA_USE_FP8_INDEXER = EnvBool(False)

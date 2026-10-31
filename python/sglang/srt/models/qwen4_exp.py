@@ -28,6 +28,7 @@ from sglang.srt.layers.dp_attention import (
     dp_gather_replicate,
     dp_scatter,
     get_attention_dp_size,
+    get_attn_tp_group,
     get_dp_global_num_tokens,
     get_global_dp_buffer,
     get_local_dp_buffer,
@@ -35,6 +36,11 @@ from sglang.srt.layers.dp_attention import (
     is_dp_attention_enabled,
 )
 from sglang.srt.layers.hc_seq_parallel import SeqParallelPlan, plan_seq_parallel
+from sglang.srt.layers.sdma_reduce_scatter import (
+    PendingReduceScatter,
+    SdmaReduceScatter,
+    get_sdma_reduce_scatter,
+)
 from sglang.srt.layers.hyperconnection import (
     GatedResidual,
     HyperConnectionConfig,
@@ -62,7 +68,8 @@ from sglang.srt.models.qwen3_5 import (
 )
 from sglang.srt.models.qwen3_vl import Qwen3VLForConditionalGeneration
 from sglang.srt.runtime_context import get_forward, get_parallel
-from sglang.srt.utils import logger
+from sglang.srt.server_args import get_global_server_args
+from sglang.srt.utils import is_hip, logger
 
 # Decode/verify-sized batches only: at prefill sizes both chains are compute
 # bound and serializing them on one stream is faster than contending.
@@ -1246,6 +1253,78 @@ class Qwen4ExpPLELayer(nn.Module):
         return _pad_token_rows(output, batch.physical_tokens)
 
 
+def _sdma_reduce_scatter_for(
+    plan: SeqParallelPlan, *, hidden_size: int, dtype: torch.dtype
+) -> Optional[SdmaReduceScatter]:
+    rs = get_sdma_reduce_scatter(
+        capacity_tokens=get_global_server_args().max_prefill_tokens,
+        hidden_size=hidden_size,
+        dtype=dtype,
+        cpu_group=get_attn_tp_group().cpu_group,
+        transport=envs.SGLANG_QWEN4_SP_SDMA_RS_TRANSPORT.get(),
+    )
+    return rs if rs.fits(plan.local_rows) else None
+
+
+def _send_sdma_reduce_scatter(
+    rs: SdmaReduceScatter, plan: SeqParallelPlan, rows
+) -> torch.Tensor:
+    """Start the reduce-scatter; the returned [num_tokens, hidden] tensor only
+    carries the in-flight handle to `_combine_reduce_scattered`."""
+    pending = rs.send(
+        rows=rows,
+        num_tokens=plan.num_tokens,
+        local_rows=plan.local_rows,
+        chunks=envs.SGLANG_QWEN4_SP_SDMA_RS_CHUNKS.get(),
+    )
+    carrier = pending.carrier
+    carrier._sglang_sp_pending = pending
+    return carrier
+
+
+def _combine_reduce_scattered(
+    hyper_connection: GatedResidual,
+    partial: torch.Tensor,
+    residuals,
+    seq_parallel: SeqParallelPlan,
+) -> torch.Tensor:
+    """Reduce-scatter a block's partial output and combine it into this rank's
+    rows of the residual stream, per chunk as it lands when over SDMA."""
+    pending: Optional[PendingReduceScatter] = getattr(
+        partial, "_sglang_sp_pending", None
+    )
+    if pending is None:
+        return hyper_connection.combine(seq_parallel.reduce_scatter(partial), residuals)
+    if not hyper_connection.can_combine_rows(torch.bfloat16, residuals):
+        return hyper_connection.combine(pending.result(), residuals)
+    out = torch.empty_like(residuals[0])
+    for r0, r1, rows in pending.chunks():
+        hyper_connection.combine_rows(rows, residuals, out=out, rows=slice(r0, r1))
+    return out
+
+
+def _install_sp_sdma_proj(layer: nn.Module, proj: nn.Module) -> None:
+    """Under a sequence-parallel plan, compute the row-parallel projection in row
+    chunks and reduce-scatter them over SDMA while the next chunks compute."""
+    plain_forward = proj.forward
+
+    def forward(x: torch.Tensor):
+        plan = layer._sp_plan
+        rs = (
+            None
+            if plan is None
+            else _sdma_reduce_scatter_for(
+                plan, hidden_size=proj.output_size, dtype=x.dtype
+            )
+        )
+        if rs is None:
+            return plain_forward(x)
+        rows = lambda r0, r1: plain_forward(x[r0:r1])[0]
+        return _send_sdma_reduce_scatter(rs, plan, rows), None
+
+    proj.forward = forward
+
+
 class Qwen4ExpLayerExtensionMixin:
     def _init_qwen4_exp_layer_extensions(
         self,
@@ -1300,6 +1379,21 @@ class Qwen4ExpLayerExtensionMixin:
             use_mix=True,
             use_combine=True,
         )
+        self._sp_plan: Optional[SeqParallelPlan] = None
+        self._sp_sdma_rs = (
+            is_hip()
+            and envs.SGLANG_QWEN4_SEQ_PARALLEL.get()
+            and envs.SGLANG_QWEN4_SP_SDMA_RS.get()
+        )
+        if self._sp_sdma_rs:
+            _install_sp_sdma_proj(
+                self,
+                (
+                    self.linear_attn.out_proj
+                    if isinstance(self, Qwen3_5LinearDecoderLayer)
+                    else self.o_proj
+                ),
+            )
 
     def _prepare_qwen4_exp_attn(
         self,
@@ -1310,6 +1404,7 @@ class Qwen4ExpLayerExtensionMixin:
         ple_batch: Optional[_PLEBatch],
         seq_parallel: Optional[SeqParallelPlan],
     ):
+        self._sp_plan = seq_parallel
         hc_dim = self.hc_count * self.hidden_size
         if hidden_states.shape[-1] != hc_dim:
             assert hidden_states.shape[-1] == self.hidden_size
@@ -1346,10 +1441,13 @@ class Qwen4ExpLayerExtensionMixin:
         seq_parallel: Optional[SeqParallelPlan],
     ):
         if seq_parallel is not None:
-            hidden_states = seq_parallel.reduce_scatter(hidden_states)
-        elif not forward_batch.forward_mode.is_idle():
-            hidden_states = attn_tp_all_reduce(hidden_states)
-        hidden_states = self.attn_hyper_connection.combine(hidden_states, residual)
+            hidden_states = _combine_reduce_scattered(
+                self.attn_hyper_connection, hidden_states, residual, seq_parallel
+            )
+        else:
+            if not forward_batch.forward_mode.is_idle():
+                hidden_states = attn_tp_all_reduce(hidden_states)
+            hidden_states = self.attn_hyper_connection.combine(hidden_states, residual)
         hidden_states, residual = self.mlp_hyper_connection.mix(hidden_states)
         if seq_parallel is not None:
             hidden_states = seq_parallel.all_gather(hidden_states)
@@ -1373,7 +1471,19 @@ class Qwen4ExpLayerExtensionMixin:
         if seq_parallel is not None:
             # Returns this rank's partial sum; the postprocess reduce-scatters it.
             with get_forward().scoped(mlp_reduce_scatter=True):
-                return self.mlp(hidden_states, forward_batch)
+                partial = self.mlp(hidden_states, forward_batch)
+            rs = (
+                _sdma_reduce_scatter_for(
+                    seq_parallel, hidden_size=partial.shape[1], dtype=partial.dtype
+                )
+                if self._sp_sdma_rs
+                else None
+            )
+            if rs is None:
+                return partial
+            return _send_sdma_reduce_scatter(
+                rs, seq_parallel, lambda r0, r1: partial[r0:r1]
+            )
 
         use_dp_moe_gather = self._qwen4_exp_use_dp_moe_gather()
         use_attn_tp_a2a_scatter = self._qwen4_exp_use_attn_tp_a2a_scatter()
@@ -1427,8 +1537,11 @@ class Qwen4ExpLayerExtensionMixin:
         seq_parallel: Optional[SeqParallelPlan],
     ):
         if seq_parallel is not None:
-            hidden_states = seq_parallel.reduce_scatter(hidden_states)
-        hidden_states = self.mlp_hyper_connection.combine(hidden_states, residual)
+            hidden_states = _combine_reduce_scattered(
+                self.mlp_hyper_connection, hidden_states, residual, seq_parallel
+            )
+        else:
+            hidden_states = self.mlp_hyper_connection.combine(hidden_states, residual)
         return hidden_states, None
 
 
