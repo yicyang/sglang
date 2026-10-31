@@ -1807,6 +1807,8 @@ class Qwen4ExpModel(Qwen3_5ForCausalLM):
             not self._seq_parallel_enabled
             or not forward_batch.forward_mode.is_extend_without_speculative()
             or get_is_capture_mode()
+            # The residual is sharded at an absolute layer index; not split across PP stages.
+            or self.start_layer != 0
             or self._seq_parallel_first_layer >= self.end_layer
             or any(
                 getattr(self.layers[i], "_is_layer_to_capture", False)

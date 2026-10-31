@@ -44,7 +44,10 @@ Decode, CUDA graph capture, speculative modes, DP attention and EP all-to-all ke
 | 4 | 0.775 / 0.764 | 0.831 / 0.814 | 0.586 / 0.588 | 0.615 / 0.610 |
 | 8 | 1.011 / 1.001 | 1.120 / 1.113 | 0.786 / 0.780 | 0.830 / 0.823 |
 | 16 | 1.216 / 1.209 | 1.387 / 1.370 | 0.925 / 0.926 | 0.987 / 0.992 |
-| 32 | 1.343 / 1.338 | 1.570 / 1.559 | 0.999 / 1.000 | 1.070 / 1.078 |
+| 32 | 1.343 / 1.338 * | 1.570 / 1.559 / 1.548 * | 0.999 / 1.000 | 1.070 / 1.078 |
+
+\* The first TP4 base round at c32 overlapped with a server start on the same node (1.120 req/s, 35 s max
+ITL) and was discarded; both TP4 arms were rerun alone at c32 (the last value).
 
 Greedy outputs of a long-context probe are bit-identical to the baseline; gsm8k and the probe
 (48/48) are unchanged.

@@ -15,6 +15,7 @@ import msgspec
 import torch
 
 from sglang.srt.distributed.parallel_state import get_attn_tp_group
+from sglang.srt.utils import is_hip
 
 
 class SeqParallelPlan(msgspec.Struct, frozen=True):
@@ -44,12 +45,7 @@ class SeqParallelPlan(msgspec.Struct, frozen=True):
         partial = partial.contiguous()
         out = partial.new_empty(self.local_rows, partial.shape[1])
         group = get_attn_tp_group()
-        ca_comm = group.ca_comm
-        if group._has_aiter_custom_reduce_scatter() and ca_comm.should_custom_ar(
-            partial
-        ):
-            ca_comm.reduce_scatter(partial, out)
-        else:
+        if not _aiter_reduce_scatter(group.ca_comm, partial, out):
             group.reduce_scatter_tensor(out, partial)
         return out
 
@@ -58,6 +54,26 @@ class SeqParallelPlan(msgspec.Struct, frozen=True):
         out = local.new_empty(self.local_rows * self.world_size, *local.shape[1:])
         get_attn_tp_group().all_gather_into_tensor(out, local.contiguous())
         return out[: self.num_tokens]
+
+
+def _aiter_reduce_scatter(ca_comm, partial: torch.Tensor, out: torch.Tensor) -> bool:
+    """Equal-chunk reduce-scatter on aiter's custom kernel when it takes this size.
+
+    `GroupCoordinator.reduce_scatter_tensor` only uses it under
+    SGLANG_DP_USE_REDUCE_SCATTER and otherwise falls back to RCCL.
+    """
+    if not is_hip() or ca_comm is None or ca_comm.disabled:
+        return False
+    from aiter.dist.device_communicators.custom_all_reduce import (
+        CustomAllreduce as AiterCustomAllreduce,
+    )
+
+    if not isinstance(ca_comm, AiterCustomAllreduce) or not ca_comm.should_custom_ar(
+        partial
+    ):
+        return False
+    ca_comm.reduce_scatter(partial, out)
+    return True
 
 
 def plan_seq_parallel(
