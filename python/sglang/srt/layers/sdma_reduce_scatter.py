@@ -285,6 +285,8 @@ class SdmaReduceScatter:
     ) -> PendingReduceScatter:
         """Reduce-scatter `rows(r0, r1)` (this rank's partial sums of rows
         [r0, r1) < num_tokens) over the padded [world * local_rows] rows."""
+        if not 1 <= chunks <= _MAX_CHUNKS:
+            raise ValueError(f"chunks must be in [1, {_MAX_CHUNKS}], got {chunks}")
         comp = torch.cuda.current_stream()
         for stream in self._copy_streams.values():
             comp.wait_stream(stream)

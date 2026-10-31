@@ -36,11 +36,6 @@ from sglang.srt.layers.dp_attention import (
     is_dp_attention_enabled,
 )
 from sglang.srt.layers.hc_seq_parallel import SeqParallelPlan, plan_seq_parallel
-from sglang.srt.layers.sdma_reduce_scatter import (
-    PendingReduceScatter,
-    SdmaReduceScatter,
-    get_sdma_reduce_scatter,
-)
 from sglang.srt.layers.hyperconnection import (
     GatedResidual,
     HyperConnectionConfig,
@@ -51,6 +46,11 @@ from sglang.srt.layers.moe import get_moe_a2a_backend, should_use_dp_reduce_scat
 from sglang.srt.layers.moe.fused_moe_triton.layer import FusedMoE
 from sglang.srt.layers.quantization.base_config import QuantizationConfig
 from sglang.srt.layers.quantization.unquant import UnquantizedEmbeddingMethod
+from sglang.srt.layers.sdma_reduce_scatter import (
+    PendingReduceScatter,
+    SdmaReduceScatter,
+    get_sdma_reduce_scatter,
+)
 from sglang.srt.layers.utils import get_layer_id
 from sglang.srt.layers.vocab_parallel_embedding import VocabParallelEmbedding
 from sglang.srt.model_executor.forward_batch_info import ForwardBatch, ForwardMode
