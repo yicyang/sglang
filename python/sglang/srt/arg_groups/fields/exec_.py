@@ -429,8 +429,8 @@ class ExecMamba(msgspec.Struct):
     linear_attn_prefill_backend: A[
         Optional[str],
         Arg(
-            help="Override the kernel backend for linear attention prefill/extend. If not set, uses --linear-attn-backend; compatible SM100 GDN models may automatically select FlashInfer.",
-            choices=LINEAR_ATTN_KERNEL_BACKEND_CHOICES,
+            help="Override the kernel backend for linear attention prefill/extend. If not set, uses --linear-attn-backend; compatible SM100 GDN models may automatically select FlashInfer. AITER supports GDN prefill on ROCm, with Triton fallback for unsupported inputs.",
+            choices=LINEAR_ATTN_KERNEL_BACKEND_CHOICES + ["aiter"],
         ),
     ] = None
     linear_attn_verify_backend: A[

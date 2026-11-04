@@ -29,9 +29,22 @@ if [[ -z "${MEM_FRACTION_STATIC:-}" ]]; then
   fi
 fi
 CHUNKED_PREFILL_SIZE="${CHUNKED_PREFILL_SIZE:-16384}"
+# Persistent SSM state pool; the AITER per-chunk h snapshots remain BF16.
+# Default to float32 for the FP32-state control run; set MAMBA_SSM_DTYPE=bfloat16 to use BF16.
+MAMBA_SSM_DTYPE="${MAMBA_SSM_DTYPE:-float32}"
 MAX_RUNNING_REQUESTS="${MAX_RUNNING_REQUESTS:-32}"
 CUDA_GRAPH_MAX_BS_DECODE="${CUDA_GRAPH_MAX_BS_DECODE:-32}"
 AITER_MOE_PADDING_SIZE="${AITER_MOE_PADDING_SIZE:-64}"
+# Select the public prefill backend; use triton for the control run.
+LINEAR_ATTN_PREFILL_BACKEND="${LINEAR_ATTN_PREFILL_BACKEND:-aiter}"
+case "${LINEAR_ATTN_PREFILL_BACKEND}" in
+  triton|aiter)
+    ;;
+  *)
+    echo "LINEAR_ATTN_PREFILL_BACKEND must be 'triton' or 'aiter' (got ${LINEAR_ATTN_PREFILL_BACKEND})." >&2
+    exit 1
+    ;;
+esac
 
 if [[ ! -f "${MODEL_PATH}/config.json" ]]; then
   echo "Model config not found: ${MODEL_PATH}/config.json" >&2
@@ -47,6 +60,14 @@ if [[ "${PLE_OFFLOAD_EMBEDDING}" != "0" && "${PLE_OFFLOAD_EMBEDDING}" != "1" ]];
   echo "PLE_OFFLOAD_EMBEDDING must be 0 or 1 (got ${PLE_OFFLOAD_EMBEDDING})." >&2
   exit 1
 fi
+
+case "${MAMBA_SSM_DTYPE}" in
+  float32|bfloat16) ;;
+  *)
+    echo "MAMBA_SSM_DTYPE must be float32 or bfloat16 for this AITER GDN setup (got ${MAMBA_SSM_DTYPE})." >&2
+    exit 1
+    ;;
+esac
 
 
 "${SERVER_PYTHON:-python}" - "${TP_SIZE}" <<'PY'
@@ -77,8 +98,10 @@ PY
 #unset SGLANG_USE_AITER
 export SGLANG_USE_AITER=1
 export SGLANG_GR_READ_FLYDSL="${SGLANG_GR_READ_FLYDSL:-1}"
-printf 'GR read: installed PyHIP enabled=%s; TP=%s; AITER_MOE_PADDING_SIZE=%s\n' \
-  "${SGLANG_GR_READ_FLYDSL}" "${TP_SIZE}" "${AITER_MOE_PADDING_SIZE}"
+printf 'GR read: installed PyHIP enabled=%s; TP=%s; AITER_MOE_PADDING_SIZE=%s; LINEAR_ATTN_PREFILL_BACKEND=%s\n' \
+  "${SGLANG_GR_READ_FLYDSL}" "${TP_SIZE}" "${AITER_MOE_PADDING_SIZE}" \
+  "${LINEAR_ATTN_PREFILL_BACKEND}"
+printf 'SSM state dtype: %s (extra CLI arguments may override script defaults)\n' "${MAMBA_SSM_DTYPE}"
 # export CUDA_VISIBLE_DEVICES=4,5,6,7
 # export HIP_VISIBLE_DEVICES=4,5,6,7
 command=(
@@ -90,6 +113,10 @@ command=(
   --tp-size "${TP_SIZE}"
   --attention-backend aiter
   --moe-runner-backend aiter
+  --linear-attn-backend triton
+  --linear-attn-decode-backend triton
+  --linear-attn-prefill-backend "${LINEAR_ATTN_PREFILL_BACKEND}"
+  --linear-attn-verify-backend triton
   --kv-cache-dtype auto
   --chunked-prefill-size "${CHUNKED_PREFILL_SIZE}"
   --watchdog-timeout 1200
@@ -97,6 +124,7 @@ command=(
   --mem-fraction-static "${MEM_FRACTION_STATIC}"
   --max-running-requests "${MAX_RUNNING_REQUESTS}"
   --cuda-graph-max-bs-decode "${CUDA_GRAPH_MAX_BS_DECODE}"
+  --mamba-ssm-dtype "${MAMBA_SSM_DTYPE}"
 )
 
 if [[ "$MTP" == 1 ]]; then
