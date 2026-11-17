@@ -178,8 +178,81 @@ def fig_qps(data):
     return svg(W, H, b, "End-to-end QPS", "QPS for the Triton baseline and this PR at TP2 and TP4")
 
 
+# ---------------------------------------------------------------- fusion figures (concise)
+def _chain(b, x0, y, segs, scale, total_label, fill):
+    x = x0
+    for i, (name, v) in enumerate(segs):
+        w = v * scale
+        b += f"<rect x='{x:.1f}' y='{y}' width='{max(w - 2, 1):.1f}' height='26' rx='3' fill='{fill}'/>\n"
+        if w > len(name) * 6.6 + 10:
+            b += text(x + w / 2, y + 17, name, 11, INK if fill == BASE else SURF, "middle")
+        else:
+            b += f"<line x1='{x + w / 2:.1f}' y1='{y + 27}' x2='{x + w / 2:.1f}' y2='{y + 37}' stroke='{MUTED}'/>\n"
+            b += text(x + w / 2, y + 49 + (i % 2) * 13, name, 10, INK2, "middle")
+        x += w
+    b += text(x + 6, y + 17, total_label, 12, INK, weight="600")
+    return b
+
+
+def fig_fusion(title, sub, before, after, after_extra, scale, unit, notes, H, n_before):
+    W = 860
+    b = text(24, 32, title, 16, weight="600") + text(24, 52, sub, 12, INK2)
+    x0, y0 = 150, 76
+    tb = sum(v for _, v in before)
+    b += text(24, y0 + 17, "before", 13, weight="600")
+    b = _chain(b, x0, y0, before, scale, f"{tb:.0f} {unit}, {n_before} kernels", BASE)
+    y1 = y0 + 84
+    b += text(24, y1 + 17, "after", 13, weight="600")
+    ta = sum(v for _, v in after)
+    b = _chain(b, x0, y1, after, scale, "", S1)
+    x = x0 + sum(v for _, v in after) * scale
+    for name, v in after_extra:
+        w = v * scale
+        b += f"<rect x='{x:.1f}' y='{y1}' width='{w - 2:.1f}' height='26' rx='3' fill='{BASE}'/>\n"
+        b += f"<line x1='{x + w / 2:.1f}' y1='{y1 + 27}' x2='{x + w / 2:.1f}' y2='{y1 + 37}' stroke='{MUTED}'/>\n"
+        b += text(x + w / 2, y1 + 49, name, 10, INK2, "middle")
+        x += w
+        ta += v
+    b += text(x + 6, y1 + 17, f"{ta:.1f} {unit} ({(ta / tb - 1) * 100:+.0f}%)" if ta < 100 else f"{ta:.0f} {unit} ({(ta / tb - 1) * 100:+.0f}%)", 12, INK, weight="600")
+    yy = y1 + 82
+    for s in notes:
+        b += f"<circle cx='30' cy='{yy - 4}' r='3' fill='{S1}'/>" + text(42, yy, s, 12, INK)
+        yy += 20
+    return svg(W, H, b, title, sub)
+
+
+def fig_decode_fusion():
+    return fig_fusion(
+        "GDN decode: 6 kernels fused into 1 (TP2, batch 8, per layer)",
+        "Serving torch profile on MI308X",
+        [("b/a copy x2", 10.8), ("cat(q,k,v)", 6.2), ("conv1d_update", 5.8), ("Triton packed recurrence", 26.2),
+         ("z copy", 5.4), ("gated RMSNorm", 5.5)],
+        [("FlyDSL fused decode", 15.9)], [("gated RMSNorm (unchanged)", 5.5)],
+        9.0, "us",
+        ["fused_qkvzba_conv1d_gated_delta_rule_decode_flydsl: unpack + conv + gating + l2norm + recurrence",
+         "Bound by the in-place fp32 state write-back; nt loads/stores of the state cut it ~25%",
+         "q/k conv state shared by 3 v-heads is shifted once, by the last workgroup that read it"],
+        292, 7)
+
+
+def fig_prefill_fusion():
+    us = lambda ms: ms * 1000 / 36  # noqa: E731  per-layer from per-step totals
+    return fig_fusion(
+        "GDN prefill front end: 5 kernels fused into 1 (TP2, per layer)",
+        "Serving torch profile on MI308X, prefill step of 8 x 12000-token requests",
+        [("cat(q,k,v)", us(12.4)), ("Triton causal_conv1d_fwd", us(22.8)), ("qkv split", us(5.0)),
+         ("l2norm x2", us(3.8))],
+        [("FlyDSL prefill front", us(13.6))], [],
+        0.45, "us",
+        ["flydsl_gdn_prefill_front: varlen causal conv + SiLU + q/k/v split + q/k l2norm, one read of in_proj",
+         "Was VALU-bound: exact bf16 product rounding via Veltkamp splitting packs into v_pk_* (2.5x fewer VALU ops)",
+         "Conv cache bit-exact vs Triton; q/k/v within 1 bf16 ulp"],
+        292, 5)
+
+
 if __name__ == "__main__":
-    open(f"{OUT}/gdn_decode_fusion.svg", "w").write(fig_decode())
+    open(f"{OUT}/gdn_decode_fusion.svg", "w").write(fig_decode_fusion())
+    open(f"{OUT}/gdn_prefill_fusion.svg", "w").write(fig_prefill_fusion())
     open(f"{OUT}/gdn_state_writeback.svg", "w").write(fig_rmw())
     open(f"{OUT}/gdn_prefill.svg", "w").write(fig_prefill())
     qf = os.path.join(OUT, "qps.json")

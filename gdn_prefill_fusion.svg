@@ -1,0 +1,26 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='860' height='292' viewBox='0 0 860 292' role='img' aria-labelledby='t d' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
+<title id='t'>GDN prefill front end: 5 kernels fused into 1 (TP2, per layer)</title><desc id='d'>Serving torch profile on MI308X, prefill step of 8 x 12000-token requests</desc>
+<rect width='860' height='292' fill='#fcfcfb'/>
+<text x='24' y='32' font-size='16' fill='#0b0b0b' text-anchor='start' font-weight='600'>GDN prefill front end: 5 kernels fused into 1 (TP2, per layer)</text>
+<text x='24' y='52' font-size='12' fill='#52514e' text-anchor='start' font-weight='normal'>Serving torch profile on MI308X, prefill step of 8 x 12000-token requests</text>
+<text x='24' y='93' font-size='13' fill='#0b0b0b' text-anchor='start' font-weight='600'>before</text>
+<rect x='150.0' y='76' width='153.0' height='26' rx='3' fill='#b9b8b2'/>
+<text x='227.5' y='93' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>cat(q,k,v)</text>
+<rect x='305.0' y='76' width='283.0' height='26' rx='3' fill='#b9b8b2'/>
+<text x='447.5' y='93' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>Triton causal_conv1d_fwd</text>
+<rect x='590.0' y='76' width='60.5' height='26' rx='3' fill='#b9b8b2'/>
+<line x1='621.2' y1='103' x2='621.2' y2='113' stroke='#8a8985'/>
+<text x='621.25' y='125' font-size='10' fill='#52514e' text-anchor='middle' font-weight='normal'>qkv split</text>
+<rect x='652.5' y='76' width='45.5' height='26' rx='3' fill='#b9b8b2'/>
+<line x1='676.2' y1='103' x2='676.2' y2='113' stroke='#8a8985'/>
+<text x='676.25' y='138' font-size='10' fill='#52514e' text-anchor='middle' font-weight='normal'>l2norm x2</text>
+<text x='706.0' y='93' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='600'>1222 us, 5 kernels</text>
+<text x='24' y='177' font-size='13' fill='#0b0b0b' text-anchor='start' font-weight='600'>after</text>
+<rect x='150.0' y='160' width='168.0' height='26' rx='3' fill='#2a78d6'/>
+<text x='235.0' y='177' font-size='11' fill='#fcfcfb' text-anchor='middle' font-weight='normal'>FlyDSL prefill front</text>
+<text x='326.0' y='177' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='600'></text>
+<text x='326.0' y='177' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='600'>378 us (-69%)</text>
+<circle cx='30' cy='238' r='3' fill='#2a78d6'/><text x='42' y='242' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>flydsl_gdn_prefill_front: varlen causal conv + SiLU + q/k/v split + q/k l2norm, one read of in_proj</text>
+<circle cx='30' cy='258' r='3' fill='#2a78d6'/><text x='42' y='262' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>Was VALU-bound: exact bf16 product rounding via Veltkamp splitting packs into v_pk_* (2.5x fewer VALU ops)</text>
+<circle cx='30' cy='278' r='3' fill='#2a78d6'/><text x='42' y='282' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>Conv cache bit-exact vs Triton; q/k/v within 1 bf16 ulp</text>
+</svg>
