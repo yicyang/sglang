@@ -43,8 +43,8 @@ def fig_decode():
     b = text(24, 32, "GDN decode, one layer (TP2, batch 8, MI308X): 7 kernels to 2, Triton interface kept", 16, weight="600")
     b += text(24, 52, "Kernel time per layer from a torch profile of the serving decode step", 12, INK2)
     x0, y0, scale = 170, 78, 10.5  # px per us
-    before = [("b/a copy x2", 9.0), ("cat(q, k, v)", 6.2), ("causal_conv1d_update", 5.8),
-              ("packed recurrence", 26.2), ("z copy", 4.6), ("gated RMSNorm", 5.5)]
+    before = [("b/a copy x2", 10.8), ("cat(q, k, v)", 6.2), ("causal_conv1d_update", 5.8),
+              ("packed recurrence", 26.2), ("z copy", 5.4), ("gated RMSNorm", 5.5)]
     b += text(24, y0 + 16, "Triton chain", 13, weight="600")
     x = x0
     for name, us in before:
