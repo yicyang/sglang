@@ -1,0 +1,23 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='860' height='300' viewBox='0 0 860 300' role='img' aria-labelledby='t d' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
+<title id='t'>GDN prefill kernels</title><desc id='d'>Prefill GDN kernel time before and after per layer</desc>
+<rect width='860' height='300' fill='#fcfcfb'/>
+<text x='24' y='32' font-size='16' fill='#0b0b0b' text-anchor='start' font-weight='600'>GDN prefill, one layer (TP2, 12k tokens): kernel time, us (lower is better)</text>
+<text x='24' y='52' font-size='12' fill='#52514e' text-anchor='start' font-weight='normal'>Same outputs: conv cache bit-exact, chunk_o and the norm bit-identical, q/k/v within 1 bf16 ulp</text>
+<text x='322' y='95' font-size='12' fill='#0b0b0b' text-anchor='end' font-weight='normal'>front end: cat + conv + split + 2x l2norm</text>
+<path d='M330,80 H737.5999999999999 Q741.5999999999999,80 741.5999999999999,84 V96 Q741.5999999999999,100 737.5999999999999,100 H330 Z' fill='#b9b8b2'/>
+<text x='747.5999999999999' y='95' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>980</text>
+<path d='M330,104 H462.5 Q466.5,104 466.5,108 V120 Q466.5,124 462.5,124 H330 Z' fill='#eb6834'/>
+<text x='472.5' y='119' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>325  (1 FlyDSL kernel)</text>
+<text x='322' y='157' font-size='12' fill='#0b0b0b' text-anchor='end' font-weight='normal'>chunk_fwd_o (Triton)</text>
+<path d='M330,142 H595.64 Q599.64,142 599.64,146 V158 Q599.64,162 595.64,162 H330 Z' fill='#b9b8b2'/>
+<text x='605.64' y='157' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>642</text>
+<path d='M330,166 H502.82 Q506.82,166 506.82,170 V182 Q506.82,186 502.82,186 H330 Z' fill='#eb6834'/>
+<text x='512.8199999999999' y='181' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>421  (BK=64, BV=128 on gfx942)</text>
+<text x='322' y='219' font-size='12' fill='#0b0b0b' text-anchor='end' font-weight='normal'>z copy + gated RMSNorm</text>
+<path d='M330,204 H452.42 Q456.42,204 456.42,208 V220 Q456.42,224 452.42,224 H330 Z' fill='#b9b8b2'/>
+<text x='462.42' y='219' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>301</text>
+<path d='M330,228 H407.48 Q411.48,228 411.48,232 V244 Q411.48,248 407.48,248 H330 Z' fill='#eb6834'/>
+<text x='417.48' y='243' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>194  (norm reads strided z)</text>
+<rect x='330' y='270' width='12' height='12' rx='2' fill='#b9b8b2'/><text x='348' y='280' font-size='12' fill='#52514e' text-anchor='start' font-weight='normal'>before</text>
+<rect x='410' y='270' width='12' height='12' rx='2' fill='#eb6834'/><text x='428' y='280' font-size='12' fill='#52514e' text-anchor='start' font-weight='normal'>after</text>
+</svg>

@@ -1,0 +1,31 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='860' height='290' viewBox='0 0 860 290' role='img' aria-labelledby='t d' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
+<title id='t'>In-place state write-back</title><desc id='d'>Bandwidth of in-place read-modify-write and decode kernel latency steps</desc>
+<rect width='860' height='290' fill='#fcfcfb'/>
+<text x='24' y='32' font-size='16' fill='#0b0b0b' text-anchor='start' font-weight='600'>Why the decode recurrence is bound by the state write-back (MI308X)</text>
+<text x='24' y='52' font-size='12' fill='#52514e' text-anchor='start' font-weight='normal'>Left: 25 MB read+write microbenchmark. Right: recurrence kernel, TP2 batch 8 (us, lower is better)</text>
+<text x='222' y='99' font-size='12' fill='#0b0b0b' text-anchor='end' font-weight='normal'>copy to another buffer</text>
+<path d='M230,84 H393.4 Q397.4,84 397.4,88 V102 Q397.4,106 393.4,106 H230 Z' fill='#b9b8b2'/>
+<text x='403.4' y='99' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>2.79 TB/s</text>
+<text x='222' y='135' font-size='12' fill='#0b0b0b' text-anchor='end' font-weight='normal'>in place, default cache policy</text>
+<path d='M230,120 H302.2 Q306.2,120 306.2,124 V138 Q306.2,142 302.2,142 H230 Z' fill='#b9b8b2'/>
+<text x='312.2' y='135' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>1.27 TB/s</text>
+<text x='222' y='171' font-size='12' fill='#0b0b0b' text-anchor='end' font-weight='normal'>in place, nt load + nt store</text>
+<path d='M230,156 H316.0 Q320.0,156 320.0,160 V174 Q320.0,178 316.0,178 H230 Z' fill='#2a78d6'/>
+<text x='326.0' y='171' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>1.50 TB/s</text>
+<text x='24' y='206' font-size='11' fill='#52514e' text-anchor='start' font-weight='normal'>A store to a line the kernel has just read is slow; writes to lines read</text>
+<text x='24' y='221' font-size='11' fill='#52514e' text-anchor='start' font-weight='normal'>&gt;6 MB earlier, or not yet read, run at 2.0 to 3.0 TB/s.</text>
+<text x='622' y='99' font-size='12' fill='#0b0b0b' text-anchor='end' font-weight='normal'>sglang Triton</text>
+<path d='M630,84 H788.44 Q792.44,84 792.44,88 V102 Q792.44,106 788.44,106 H630 Z' fill='#b9b8b2'/>
+<text x='798.44' y='99' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>26.2</text>
+<text x='622' y='135' font-size='12' fill='#0b0b0b' text-anchor='end' font-weight='normal'>FlyDSL v0</text>
+<path d='M630,120 H749.38 Q753.38,120 753.38,124 V138 Q753.38,142 749.38,142 H630 Z' fill='#2a78d6'/>
+<text x='759.38' y='135' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>19.9</text>
+<text x='622' y='171' font-size='12' fill='#0b0b0b' text-anchor='end' font-weight='normal'>+ s_load, DPP, straight-line</text>
+<path d='M630,156 H747.52 Q751.52,156 751.52,160 V174 Q751.52,178 747.52,178 H630 Z' fill='#2a78d6'/>
+<text x='757.52' y='171' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>19.6</text>
+<text x='622' y='207' font-size='12' fill='#0b0b0b' text-anchor='end' font-weight='normal'>+ nt load/store</text>
+<path d='M630,192 H715.9 Q719.9,192 719.9,196 V210 Q719.9,214 715.9,214 H630 Z' fill='#2a78d6'/>
+<text x='725.9' y='207' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>14.5</text>
+<text x='452' y='242' font-size='11' fill='#52514e' text-anchor='start' font-weight='normal'>With all compute removed (the loaded state stored back), the kernel</text>
+<text x='452' y='257' font-size='11' fill='#52514e' text-anchor='start' font-weight='normal'>still takes 19.7 us: compute is hidden, the write path sets the floor.</text>
+</svg>

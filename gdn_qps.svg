@@ -1,0 +1,29 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='860' height='300' viewBox='0 0 860 300' role='img' aria-labelledby='t d' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
+<title id='t'>End-to-end QPS</title><desc id='d'>QPS for the Triton baseline and this PR at TP2 and TP4</desc>
+<rect width='860' height='300' fill='#fcfcfb'/>
+<text x='24' y='32' font-size='16' fill='#0b0b0b' text-anchor='start' font-weight='600'>End-to-end QPS, Qwen3.8-Flash-Next FP8 on MI308X (12000 in / 350 out)</text>
+<text x='24' y='52' font-size='12' fill='#52514e' text-anchor='start' font-weight='normal'>Same-session interleaved runs, mean of 2 (TP2) / 3 (TP4) rounds, higher is better</text>
+<line x1='80' y1='250' x2='820' y2='250' stroke='#e4e3df'/>
+<path d='M110,250 V171.78157543696588 Q110,167.78157543696588 114,167.78157543696588 H154 Q158,167.78157543696588 158,171.78157543696588 V250 Z' fill='#b9b8b2'/>
+<text x='134' y='161.78157543696588' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>0.758</text>
+<path d='M164,250 V165.22440027272984 Q164,161.22440027272984 168,161.22440027272984 H208 Q212,161.22440027272984 212,165.22440027272984 V250 Z' fill='#2a78d6'/>
+<text x='202' y='155.22440027272984' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='600'>0.819 (+8.0%)</text>
+<text x='161' y='268' font-size='12' fill='#52514e' text-anchor='middle' font-weight='normal'>TP2 c8</text>
+<path d='M290,250 V161.13221213207692 Q290,157.13221213207692 294,157.13221213207692 H334 Q338,157.13221213207692 338,161.13221213207692 V250 Z' fill='#b9b8b2'/>
+<text x='314' y='151.13221213207692' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>0.856</text>
+<path d='M344,250 V154.08343328709645 Q344,150.08343328709645 348,150.08343328709645 H388 Q392,150.08343328709645 392,154.08343328709645 V250 Z' fill='#2a78d6'/>
+<text x='382' y='144.08343328709645' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='600'>0.921 (+7.6%)</text>
+<text x='341' y='268' font-size='12' fill='#52514e' text-anchor='middle' font-weight='normal'>TP2 c12</text>
+<path d='M470,250 V148.40594360357684 Q470,144.40594360357684 474,144.40594360357684 H514 Q518,144.40594360357684 518,148.40594360357684 V250 Z' fill='#b9b8b2'/>
+<text x='494' y='138.40594360357684' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>0.974</text>
+<path d='M524,250 V141.4638061980593 Q524,137.4638061980593 528,137.4638061980593 H568 Q572,137.4638061980593 572,141.4638061980593 V250 Z' fill='#2a78d6'/>
+<text x='562' y='131.4638061980593' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='600'>1.038 (+6.6%)</text>
+<text x='521' y='268' font-size='12' fill='#52514e' text-anchor='middle' font-weight='normal'>TP4 c8</text>
+<path d='M650,250 V131.94329161302838 Q650,127.94329161302838 654,127.94329161302838 H694 Q698,127.94329161302838 698,131.94329161302838 V250 Z' fill='#b9b8b2'/>
+<text x='674' y='121.94329161302838' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>1.125</text>
+<path d='M704,250 V123.56521739130434 Q704,119.56521739130434 708,119.56521739130434 H748 Q752,119.56521739130434 752,123.56521739130434 V250 Z' fill='#2a78d6'/>
+<text x='742' y='113.56521739130434' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='600'>1.203 (+6.9%)</text>
+<text x='701' y='268' font-size='12' fill='#52514e' text-anchor='middle' font-weight='normal'>TP4 c12</text>
+<rect x='600' y='64' width='12' height='12' rx='2' fill='#b9b8b2'/><text x='618' y='74' font-size='12' fill='#52514e' text-anchor='start' font-weight='normal'>Triton baseline</text>
+<rect x='600' y='82' width='12' height='12' rx='2' fill='#2a78d6'/><text x='618' y='92' font-size='12' fill='#52514e' text-anchor='start' font-weight='normal'>this PR (FlyDSL GDN)</text>
+</svg>
