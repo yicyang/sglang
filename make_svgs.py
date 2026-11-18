@@ -41,7 +41,7 @@ def fusion():
         cols.append(x); x += BW + G
     # cols: 0=AG, 1..3 routing, 4=AG, 5 sort, 6 quant x, 7 gate-up, 8 quant h, 9 down, 10 sum
     out = [STYLE, f'<rect class="bg" width="{W}" height="470" rx="8"/>']
-    out.append(text(20, 30, "Qwen4 MoE kernels: baseline vs fused MoE (gfx942, PTPC FP8)", "ink", 16, "start", 600))
+    out.append(text(20, 30, "Qwen4 MoE kernels: baseline vs this PR + the aiter PR (gfx942, PTPC FP8)", "ink", 16, "start", 600))
 
     def box(col, y, lines, kind="box", span=1):
         x = cols[col]
@@ -79,7 +79,7 @@ def fusion():
                  (9, ["down", "8x1 + tail"]), (10, ["top-k sum"])):
         out.append(box(c, y, l))
     y = 140
-    out.append(rowlabel(y, "fused MoE", "fused_route"))
+    out.append(rowlabel(y, "this PR", "local routing"))
     for c, l in ((1, ["router GEMM", "local T/TP rows"]), (2, ["topk", "local rows"]), (3, ["+shared exp.", "local rows"])):
         out.append(box(c, y, l, "moved"))
     out.append(ag(4, y, "AG"))
@@ -99,7 +99,7 @@ def fusion():
                  (5, ["gate-up", "batch1"]), (6, ["down", "batch1"])):
         out.append(box(c, y, l))
     y = 328
-    out.append(rowlabel(y, "fused MoE", "decode small-M"))
+    out.append(rowlabel(y, "this PR", "aiter batch1"))
     out.append(box(1, y, ["Triton router", "(gfx942)"], "moved"))
     out.append(box(2, y, ["+shared exp."]))
     out.append(box(3, y, ["zero-fill out"], "gone"))
@@ -177,7 +177,7 @@ def fusion_aiter():
     x0 = 150
     cols = [x0 + i * (BW + G) for i in range(6)]
     out = [STYLE, f'<rect class="bg" width="{W}" height="{Hh}" rx="8"/>']
-    out.append(text(20, 30, "moe_fused_quant_gfx942: kernels fused vs aiter.fused_moe (gfx942, PTPC FP8)", "ink", 16, "start", 600))
+    out.append(text(20, 30, "aiter fused_moe, gfx942 FlyDSL path (PTPC FP8): kernels fused by this PR", "ink", 16, "start", 600))
 
     def box(col, y, lines, kind="box", span=1):
         x = cols[col]
@@ -199,12 +199,12 @@ def fusion_aiter():
 
     out.append(text(20, 62, "Prefill MoE (per layer)", "ink2", 13, "start", 600))
     y = 78
-    out.append(rowlabel(y, "fused_moe", "FlyDSL prefill path"))
+    out.append(rowlabel(y, "before", "_run_prefill"))
     for c, l in ((0, ["moe sorting"]), (1, ["quant x"]), (2, ["gate-up + SiLU", "bf16 out"]), (3, ["quant h", "re-read bf16"]),
                  (4, ["down", "8x1 + tail"]), (5, ["top-k sum"])):
         out.append(box(c, y, l))
     y = 140
-    out.append(rowlabel(y, "fused_quant", "prefill_moe"))
+    out.append(rowlabel(y, "this PR", "_run_prefill"))
     out.append(box(0, y, ["moe sorting"]))
     out.append(box(1, y, ["quant x"]))
     out.append(box(2, y, ["gate-up + SiLU + fp8 quant", "full-row tile, one launch"], "fused", span=2))
@@ -214,14 +214,14 @@ def fusion_aiter():
     out.append(text(cx, y + BH + 17, "M=12000: TP2 1.63 -> 1.35 ms (-17%), TP4 1.05 -> 0.75 ms (-28%)", "ink2", 12))
     out.append(text(cx, y + BH + 32, "bf16 [M*topk, inter] write + re-read removed; output bit-exact", "ink2", 12))
 
-    out.append(text(20, 262, "Decode MoE (per layer, M <= 8 at TP2 / M <= 12 at TP4)", "ink2", 13, "start", 600))
+    out.append(text(20, 262, "Decode MoE (per layer, fp8 batch1 path: M <= 8 for Qwen3.8)", "ink2", 13, "start", 600))
     y = 278
-    out.append(rowlabel(y, "fused_moe", "tuned decode path"))
+    out.append(rowlabel(y, "before", "_run_batch1"))
     out.append(box(0, y, ["zero-fill out"]))
     out.append(box(1, y, ["gate-up", "batch1"]))
     out.append(box(2, y, ["down", "batch1"]))
     y = 340
-    out.append(rowlabel(y, "fused_quant", "decode_moe_small"))
+    out.append(rowlabel(y, "this PR", "_run_batch1"))
     out.append(box(0, y, ["zero-fill out"], "gone"))
     out.append(box(1, y, ["gate-up batch1", "+ out clear"], "fused"))
     out.append(box(2, y, ["down", "batch1"]))
@@ -239,4 +239,4 @@ def fusion_aiter():
 open(os.path.join(OUT, "qwen4_fused_moe_fusion.svg"), "w").write(fusion())
 open(os.path.join(OUT, "qwen4_fused_moe_gain.svg"), "w").write(compare())
 print("ok")
-open(os.path.join(OUT, "moe_fused_quant_gfx942_fusion.svg"), "w").write(fusion_aiter())
+open(os.path.join(OUT, "aiter_fused_moe_gfx942_fusion.svg"), "w").write(fusion_aiter())
