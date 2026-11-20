@@ -250,7 +250,22 @@ def fig_prefill_fusion():
         292, 5)
 
 
+def fig_verify_fusion():
+    return fig_fusion(
+        "GDN MTP target verify: 6 kernels fused into 1 (TP2, batch 8, 4 draft tokens, per layer)",
+        "Serving torch profile on MI308X, EAGLE 3/1/4",
+        [("b/a/z copies + cat(q,k,v)", 20.1), ("conv1d_update", 5.4), ("Triton verify recurrence", 34.1),
+         ("gated RMSNorm", 4.9)],
+        [("FlyDSL fused verify", 28.6)], [("gated RMSNorm (unchanged)", 4.9)],
+        7.5, "us",
+        ["fused_qkvzba_conv1d_gated_delta_rule_verify_flydsl: unpack + conv + gating + l2norm + 4-step recurrence",
+         "Writes every step's intermediate state and conv window for the rollback; the SSM state is only read",
+         "Recurrence steps run at the write bandwidth; MTP cycle 23.7 to 22.4 ms (-5.4%), accept length unchanged"],
+        292, 7)
+
+
 if __name__ == "__main__":
+    open(f"{OUT}/gdn_verify_fusion.svg", "w").write(fig_verify_fusion())
     open(f"{OUT}/gdn_decode_fusion.svg", "w").write(fig_decode_fusion())
     open(f"{OUT}/gdn_prefill_fusion.svg", "w").write(fig_prefill_fusion())
     open(f"{OUT}/gdn_state_writeback.svg", "w").write(fig_rmw())

@@ -1,0 +1,30 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='860' height='292' viewBox='0 0 860 292' role='img' aria-labelledby='t d' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
+<title id='t'>GDN MTP target verify: 6 kernels fused into 1 (TP2, batch 8, 4 draft tokens, per layer)</title><desc id='d'>Serving torch profile on MI308X, EAGLE 3/1/4</desc>
+<rect width='860' height='292' fill='#fcfcfb'/>
+<text x='24' y='32' font-size='16' fill='#0b0b0b' text-anchor='start' font-weight='600'>GDN MTP target verify: 6 kernels fused into 1 (TP2, batch 8, 4 draft tokens, per layer)</text>
+<text x='24' y='52' font-size='12' fill='#52514e' text-anchor='start' font-weight='normal'>Serving torch profile on MI308X, EAGLE 3/1/4</text>
+<text x='24' y='93' font-size='13' fill='#0b0b0b' text-anchor='start' font-weight='600'>before</text>
+<rect x='150.0' y='76' width='148.8' height='26' rx='3' fill='#b9b8b2'/>
+<line x1='225.4' y1='103' x2='225.4' y2='113' stroke='#8a8985'/>
+<text x='225.375' y='125' font-size='10' fill='#52514e' text-anchor='middle' font-weight='normal'>b/a/z copies + cat(q,k,v)</text>
+<rect x='300.8' y='76' width='38.5' height='26' rx='3' fill='#b9b8b2'/>
+<line x1='321.0' y1='103' x2='321.0' y2='113' stroke='#8a8985'/>
+<text x='321.0' y='138' font-size='10' fill='#52514e' text-anchor='middle' font-weight='normal'>conv1d_update</text>
+<rect x='341.2' y='76' width='253.8' height='26' rx='3' fill='#b9b8b2'/>
+<text x='469.125' y='93' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>Triton verify recurrence</text>
+<rect x='597.0' y='76' width='34.8' height='26' rx='3' fill='#b9b8b2'/>
+<line x1='615.4' y1='103' x2='615.4' y2='113' stroke='#8a8985'/>
+<text x='615.375' y='138' font-size='10' fill='#52514e' text-anchor='middle' font-weight='normal'>gated RMSNorm</text>
+<text x='639.75' y='93' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='600'>64 us, 7 kernels</text>
+<text x='24' y='177' font-size='13' fill='#0b0b0b' text-anchor='start' font-weight='600'>after</text>
+<rect x='150.0' y='160' width='212.5' height='26' rx='3' fill='#2a78d6'/>
+<text x='257.25' y='177' font-size='11' fill='#fcfcfb' text-anchor='middle' font-weight='normal'>FlyDSL fused verify</text>
+<text x='370.5' y='177' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='600'></text>
+<rect x='364.5' y='160' width='34.8' height='26' rx='3' fill='#b9b8b2'/>
+<line x1='382.9' y1='187' x2='382.9' y2='197' stroke='#8a8985'/>
+<text x='382.875' y='209' font-size='10' fill='#52514e' text-anchor='middle' font-weight='normal'>gated RMSNorm (unchanged)</text>
+<text x='407.25' y='177' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='600'>33.5 us (-48%)</text>
+<circle cx='30' cy='238' r='3' fill='#2a78d6'/><text x='42' y='242' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>fused_qkvzba_conv1d_gated_delta_rule_verify_flydsl: unpack + conv + gating + l2norm + 4-step recurrence</text>
+<circle cx='30' cy='258' r='3' fill='#2a78d6'/><text x='42' y='262' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>Writes every step's intermediate state and conv window for the rollback; the SSM state is only read</text>
+<circle cx='30' cy='278' r='3' fill='#2a78d6'/><text x='42' y='282' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>Recurrence steps run at the write bandwidth; MTP cycle 23.7 to 22.4 ms (-5.4%), accept length unchanged</text>
+</svg>
