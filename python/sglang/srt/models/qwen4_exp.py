@@ -42,6 +42,7 @@ from sglang.srt.layers.hyperconnection import (
 )
 from sglang.srt.layers.layer_boundary import get_attn_tp_context
 from sglang.srt.layers.linear import ReplicatedLinear
+from sglang.srt.layers import qwen4_megamoe
 from sglang.srt.layers.logits_processor import LogitsProcessorOutput
 from sglang.srt.layers.moe import get_moe_a2a_backend, should_use_dp_reduce_scatterv
 from sglang.srt.layers.moe.fused_moe_triton.layer import FusedMoE
@@ -1788,6 +1789,19 @@ class Qwen4ExpLayerExtensionMixin:
         if not self.config.num_experts:
             return self.mlp(hidden_states)
         if seq_parallel is not None:
+            if qwen4_megamoe.enabled() and self._sp_sdma_rs:
+                carrier = qwen4_megamoe.try_run(
+                    self.mlp,
+                    hidden_states,
+                    seq_parallel,
+                    _sdma_reduce_scatter_for(
+                        seq_parallel,
+                        hidden_size=hidden_states.shape[1],
+                        dtype=hidden_states.dtype,
+                    ),
+                )
+                if carrier is not None:
+                    return carrier
             # Returns this rank's partial sum; the postprocess reduce-scatters it.
             with get_forward().scoped(mlp_reduce_scatter=True):
                 partial = self.mlp(hidden_states, forward_batch)
