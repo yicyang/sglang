@@ -64,15 +64,19 @@ def _kernel_module():
 class _MegaMoeTP2:
     """One instance per process (layers run one after another and share the buffers)."""
 
-    def __init__(self, *, hidden, inter, topk, experts, max_tokens, device):
+    def __init__(self, *, hidden, inter, topk, experts, max_tokens, device, fp8_push, rec_bytes):
         mp = _kernel_module()
         from aiter.ops.flydsl.fused_moe_gfx942 import _activation_scalars
 
         self.H, self.I, self.topk, self.E, self.cap_t = hidden, inter, topk, experts, max_tokens
         self.launch = mp.build_mega_prefill_v3(
             model_dim=hidden, inter_dim=inter, topk=topk, experts=experts, push=True,
-            fuse_xq=True, fuse_sort=True, peer_first=True, dyn=True,
+            fuse_xq=True, fuse_sort=True, peer_first=True, dyn=True, push_fp8=fp8_push,
         )
+        self.fp8_push = fp8_push
+        # fp8 RS records of the peer rows, written by the kernel and pushed from here
+        self.recs = (torch.empty(-(-max_tokens // 2) * rec_bytes, dtype=torch.int8, device=device)
+                     if fp8_push else None)
         self.sc = _activation_scalars("silu", 1.0, 1.0, None)
         T = max_tokens
         cap = T * topk + 2 * experts * 64
@@ -110,7 +114,7 @@ class _MegaMoeTP2:
         p64 = torch.zeros(16, dtype=torch.int64, pin_memory=True)
         p64[3] = hub._dev_comm.ptr
         p64[4] = dst
-        p64[5] = out[base_peer:].data_ptr()
+        p64[5] = self.recs.data_ptr() if self.fp8_push else out[base_peer:].data_ptr()
         p64[8:16] = torch.tensor([
             loc[base_peer * self.topk:].data_ptr(), out[base_peer:].data_ptr(),
             loc[base_own * self.topk:].data_ptr(), out[base_own:].data_ptr(),
@@ -129,8 +133,8 @@ class _MegaMoeTP2:
         self.calls += 1
         pend = PendingReduceScatter(
             carrier=out, local_chunks=[out[base_own:base_own + L]],
-            recv_records=rs._recv[slot].view(1, -1).view(torch.int8), rec_bytes=rs._row_bytes,
-            fp8=False, bounds=[0, L],
+            recv_records=rs._recv[slot].view(1, -1).view(torch.int8), rec_bytes=rs._rec_bytes,
+            fp8=rs._fp8, bounds=[0, L],
             wait_landed=functools.partial(rs._wait_landed, received_before=received_before),
         )
         carrier = pend.carrier
@@ -152,8 +156,8 @@ def try_run(mlp, hidden_states: torch.Tensor, plan, rs) -> Optional[torch.Tensor
     reasons = []
     if plan.world_size != 2:
         reasons.append("TP != 2")
-    if rs is None or rs._fp8:
-        reasons.append("no bf16 SDMA reduce-scatter")
+    if rs is None:
+        reasons.append("no SDMA reduce-scatter")
     if T % 2 or plan.local_rows * 2 != T:
         reasons.append("odd token count")
     if not mlp.enable_shared_expert_fusion:
@@ -176,9 +180,13 @@ def try_run(mlp, hidden_states: torch.Tensor, plan, rs) -> Optional[torch.Tensor
     if _runner is None:
         cap = max(T, int(os.environ.get("SGLANG_QWEN4_MEGAMOE_MAX_TOKENS", "49152")))
         _runner = _MegaMoeTP2(hidden=hidden_states.shape[1], inter=I, topk=mlp._mega_top_k,
-                              experts=E, max_tokens=cap, device=hidden_states.device)
+                              experts=E, max_tokens=cap, device=hidden_states.device,
+                              fp8_push=rs._fp8, rec_bytes=rs._rec_bytes)
         logger.info("Qwen4 megamoe: enabled for T >= %d (H=%d, I=%d, E=%d, topk=%d, cap=%d)",
                     _MIN_TOKENS, hidden_states.shape[1], I, E, mlp._mega_top_k, cap)
+    if _runner.fp8_push != rs._fp8:
+        _warn_once("transport", "RS transport changed after the megamoe runner was built; original path")
+        return None
     if T > _runner.cap_t:
         _warn_once("cap", f"T={T} > buffer capacity {_runner.cap_t}; original path")
         return None
