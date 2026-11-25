@@ -172,6 +172,29 @@ def _fused_update_like(
 
 class TestMambaStateScatterCorrectness(unittest.TestCase):
     @unittest.skipUnless(torch.cuda.is_available(), "CUDA is required for this test.")
+    def test_entry_spanning_several_program_blocks(self):
+        """Entries larger than one program's span (8 x 1024 elements) with a partial tail:
+        every element of a valid row is copied, rows with step -1 stay untouched."""
+        if fused_mamba_state_scatter_with_mask is None:
+            self.skipTest(
+                f"fused_mamba_state_scatter_with_mask import failed: {_FUSED_IMPORT_ERROR}"
+            )
+        torch.manual_seed(7)
+        device = torch.device("cuda")
+        L, B, C, D, elems = 3, 5, 9, 4, 9 * 1024 + 100
+        dst = torch.randn((L, C, elems), device=device, dtype=torch.float32)
+        src = torch.randn((L, B, D, elems), device=device, dtype=torch.float32)
+        dst_idx = torch.tensor([7, 0, 3, 5, 1], device=device, dtype=torch.int32)
+        steps = torch.tensor([2, -1, 0, 3, -1], device=device, dtype=torch.int32)
+        expected = dst.clone()
+        for b in range(B):
+            if steps[b] >= 0:
+                expected[:, dst_idx[b]] = src[:, b, steps[b]]
+        fused_mamba_state_scatter_with_mask(dst, src, dst_idx, steps)
+        torch.cuda.synchronize()
+        self.assertTrue(torch.equal(dst, expected))
+
+    @unittest.skipUnless(torch.cuda.is_available(), "CUDA is required for this test.")
     def test_fused_matches_reference(self):
         """Test that fused_mamba_state_scatter_with_mask matches the reference."""
         if fused_mamba_state_scatter_with_mask is None:

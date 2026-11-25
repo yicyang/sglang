@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 # Post-load warmup rows. Decode capture sizes are passed separately.
 # Kernel selection stays inside PyHIP.
-_WARMUP_ROWS = tuple(range(1, 33)) + (
+_WARMUP_ROWS = tuple(range(1, 65)) + (
     128,
     256,
     512,

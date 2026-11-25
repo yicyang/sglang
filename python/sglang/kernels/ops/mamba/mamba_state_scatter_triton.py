@@ -163,6 +163,7 @@ def _fused_mamba_state_scatter_with_mask_kernel(
     src_step_size,
     dst_req_size,
     BLOCK_SIZE: tl.constexpr,
+    BLOCKS_PER_PROG: tl.constexpr,
 ):
     """
     Fused gather-scatter kernel with built-in masking.
@@ -210,14 +211,14 @@ def _fused_mamba_state_scatter_with_mask_kernel(
     )
     dst_offset = pid_layer * dst_layer_stride + dst_idx * dst_req_stride
 
-    # Compute element range for this block
-    start = pid_block * BLOCK_SIZE
-    offsets = start + tl.arange(0, BLOCK_SIZE)
-    mask = offsets < elem_per_entry
-
-    # Load from source and store to destination
-    data = tl.load(src_ptr + src_offset + offsets, mask=mask)
-    tl.store(dst_ptr + dst_offset + offsets, data, mask=mask)
+    # Each program copies BLOCKS_PER_PROG blocks, so a call whose rows are mostly
+    # masked out (the radix track copy) launches 8x fewer early-exit programs.
+    for b in tl.static_range(BLOCKS_PER_PROG):
+        start = (pid_block * BLOCKS_PER_PROG + b) * BLOCK_SIZE
+        offsets = start + tl.arange(0, BLOCK_SIZE)
+        mask = offsets < elem_per_entry
+        data = tl.load(src_ptr + src_offset + offsets, mask=mask)
+        tl.store(dst_ptr + dst_offset + offsets, data, mask=mask)
 
 
 def fused_mamba_state_scatter_with_mask(
@@ -300,7 +301,12 @@ def fused_mamba_state_scatter_with_mask(
     BLOCK_SIZE = 1024
 
     # Grid over all requests - invalid ones will early-exit in the kernel
-    grid = (total_requests, num_layers, triton.cdiv(elem_per_entry, BLOCK_SIZE))
+    BLOCKS_PER_PROG = 8
+    grid = (
+        total_requests,
+        num_layers,
+        triton.cdiv(elem_per_entry, BLOCK_SIZE * BLOCKS_PER_PROG),
+    )
 
     _fused_mamba_state_scatter_with_mask_kernel[grid](
         src,
@@ -317,6 +323,7 @@ def fused_mamba_state_scatter_with_mask(
         src_step_size,
         dst_req_size,
         BLOCK_SIZE=BLOCK_SIZE,
+        BLOCKS_PER_PROG=BLOCKS_PER_PROG,
     )
 
 
