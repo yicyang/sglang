@@ -160,10 +160,10 @@ def overlap_figure():
 
 
 def qps_figure():
-    rows = [("12k c8", 5.8, 14.6), ("12k c16", 2.6, 16.7), ("12k c32", 3.1, 19.4), ("8k c8 (CI)", 3.7, 12.8)]
+    rows = [("c8", 5.9, 12.7), ("c16", 6.5, 15.0), ("c32", 4.0, 17.4)]
     W, H, L, B, T = 1120, 520, 90, 450, 70
     s = Svg(W, H)
-    s.text(L - 4, 40, "QPS gain over #117, Qwen3.5-35B-A3B TP2, 500 output tokens, MI308X", 21)
+    s.text(L - 4, 40, "QPS gain over #117, Qwen3.5-35B-A3B TP2, run_qwen35_pure_text_bench.sh (8000 in / 500 out), MI308X", 19)
     ymax = 20
     y = lambda v: B - v / ymax * (B - T)
     for v in range(0, ymax + 1, 4):
@@ -179,7 +179,7 @@ def qps_figure():
             s.parts.append(f'<rect x="{bx}" y="{y(v)}" width="70" height="{B - y(v)}" fill="{fill}"/>')
             s.text(bx + 35, y(v) - 8, f"+{v:.1f}%", 17, INK, anchor="middle")
         s.text(cx, B + 30, name, 19, INK2, anchor="middle")
-    for k, (fill, label) in enumerate(((BLUE, "+ FlyDSL GDN decode"), (ORANGE, "+ SDMA all-reduce (this PR)"))):
+    for k, (fill, label) in enumerate(((BLUE, "+ FlyDSL GDN decode"), (ORANGE, "+ GDN decode + SDMA all-reduce (this PR)"))):
         s.parts.append(f'<rect x="{L + 20}" y="{T + 6 + 30 * k}" width="30" height="18" fill="{fill}"/>')
         s.text(L + 60, T + 21 + 30 * k, label, 18)
     return s.svg()
