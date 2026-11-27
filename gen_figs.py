@@ -147,18 +147,20 @@ def overlap_figure():
     s.text(36, 1290, "Not overlapped: attention / GDN and the next layer's in_proj. Left exposed per layer: the first "
                      "chunk's wait (~22 us) and the last MoE chunk's copy (~380 us),", 19)
     s.text(36, 1322, "vs 5.9 ms of RCCL per layer on #117: this layer goes from 16.1 ms to 11.6 ms. "
-                     "Chunks are 1/4 of the batch rows; rank 0 rows + rank 1 rows keep the replicas bit-identical.", 19)
+                     "rank 0 rows + rank 1 rows keep the replicas bit-identical.", 19)
+    s.text(36, 1354, "Chunk count follows the batch: 4 chunks from 16384 tokens (shown), 2 from 8192, "
+                     "smaller batches keep the RCCL all-reduce (host cost per chunk).", 19)
     lx = 36
     for fill, label in ((GRAY, "compute kernel"), (ORANGE, "mori push / wait kernel (compute stream)"),
                         (BLUE, "SDMA copy (copy engine, under compute)"), (GREEN, "RCCL all-reduce (exposed)")):
-        s.parts.append(f'<rect x="{lx}" y="1398" width="34" height="24" rx="3" fill="{fill}"/>')
-        s.text(lx + 46, 1417, label, 19, INK2)
+        s.parts.append(f'<rect x="{lx}" y="1410" width="34" height="24" rx="3" fill="{fill}"/>')
+        s.text(lx + 46, 1429, label, 19, INK2)
         lx += 46 + 11 * len(label) + 40
     return s.svg()
 
 
 def qps_figure():
-    rows = [("12k c8", 5.8, 15.5), ("12k c16", 2.6, 17.2), ("12k c32", 3.1, 19.1), ("8k c8 (CI)", 3.7, 12.4)]
+    rows = [("12k c8", 5.8, 14.6), ("12k c16", 2.6, 16.7), ("12k c32", 3.1, 19.4), ("8k c8 (CI)", 3.7, 12.8)]
     W, H, L, B, T = 1120, 520, 90, 450, 70
     s = Svg(W, H)
     s.text(L - 4, 40, "QPS gain over #117, Qwen3.5-35B-A3B TP2, 500 output tokens, MI308X", 21)
